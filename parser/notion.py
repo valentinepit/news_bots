@@ -1,12 +1,15 @@
 import json
 from datetime import datetime
-
+import logging
 import pytz
 import requests
-
+import asyncio
 import message_editor as me
-import tg_bot.news_bot as nb
+# import tg_bot.news_bot as nb
+from tg_bot.aio_bot import NewsBot
 
+
+logging.basicConfig(level=logging.INFO)
 notion_token = "secret_c4oPq1SlK0KqW7sVTDIZf9sMcUEfua3Nr4ju2ebbF9T"
 
 DB_ID = "9404aafb375a4132b9a10d069a2ac580"
@@ -48,7 +51,6 @@ def find_news(_data):
 
 
 def change_news_status(page_id):
-    print(page_id)
     update_url = f"https://api.notion.com/v1/pages/{page_id}"
     update_data = {
         "properties": {
@@ -71,8 +73,9 @@ def public_messages(message_list):
         public_time = datetime.fromisoformat(_message['time'])
         if public_time < now:
             tg_message = me.create_message(_message)
-            print(nb.telegram_bot_send_text(tg_message))
-            # change_news_status(_message["id"])
+            bot = NewsBot()
+            asyncio.run(bot.send_message(tg_message))
+            change_news_status(_message["id"])
 
 
 notion_db = read_database()
