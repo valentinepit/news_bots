@@ -1,18 +1,19 @@
+import asyncio
 import json
-from datetime import datetime
 import logging
+import os
+from datetime import datetime
+
 import pytz
 import requests
-import asyncio
+
 import message_editor as me
-# import tg_bot.news_bot as nb
 from tg_bot.aio_bot import NewsBot
 
-
 logging.basicConfig(level=logging.INFO)
-notion_token = "secret_c4oPq1SlK0KqW7sVTDIZf9sMcUEfua3Nr4ju2ebbF9T"
 
-DB_ID = "9404aafb375a4132b9a10d069a2ac580"
+notion_token = os.environ["NOTION_TOKEN"]
+DB_ID = os.environ["BASE_ID"]
 
 HEADERS = {
     "Authorization": "Bearer " + notion_token,
@@ -40,11 +41,10 @@ def read_database():
 def find_news(_data):
     public_list = []
     for item in _data["results"]:
-        if item["properties"][TABLE_ROWS[0]]["select"]:
-            if item["properties"]["Status"]["select"]["name"] == "Опубликовать":
-                _news = me.convert_row_news(item["properties"])
-                _news["id"] = item["id"]
-                public_list.append(_news)
+        if item["properties"][TABLE_ROWS[0]]["select"]["name"] == "Опубликовать":
+            _news = me.convert_row_news(item["properties"])
+            _news["id"] = item["id"]
+            public_list.append(_news)
         else:
             continue
     return public_list
@@ -62,8 +62,7 @@ def change_news_status(page_id):
         }
     }
     data = json.dumps(update_data)
-    response = requests.request("PATCH", update_url, headers=HEADERS, data=data)
-    print(response.text)
+    requests.request("PATCH", update_url, headers=HEADERS, data=data)
 
 
 def public_messages(message_list):

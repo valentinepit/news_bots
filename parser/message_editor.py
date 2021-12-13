@@ -8,9 +8,9 @@ def create_message(message):
 
 def convert_row_news(_news):
     source = f"{_news['Source']['url']}\n"
+    public_time = _news["Date to publish"]["date"]["start"]
     title = f"{_news['Name']['title'][0]['text']['content']}\n"
     text = text_editor(_news["Notes"]["rich_text"]) + "\n"
-    public_time = _news["Date to publish"]["date"]["start"]
     tags = _news["#"]["rich_text"][0]["plain_text"].split("\n")
     return {"title": title, "source": source, "text": text, "time": public_time, "tags": tags}
 
