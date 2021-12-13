@@ -4,8 +4,11 @@ from aiogram import Bot, types
 from aiogram.dispatcher import Dispatcher
 from aiogram.utils import executor
 
-bot_token = os.environ["TG_TOKEN"]
-channel_id = os.environ["CHANNEL_ID"]
+# bot_token = os.environ["TG_TOKEN"]
+# channel_id = os.environ["CHANNEL_ID"]
+
+bot_token ='5034223897:AAGj1NPq3LrSrng4kyUIuC1gQk_0OWDu1S4'
+channel_id='@warp_news'
 
 bot = Bot(token=bot_token)
 dp = Dispatcher(bot)
