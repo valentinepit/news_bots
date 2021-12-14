@@ -23,7 +23,6 @@ HEADERS = {
 
 
 class News:
-
     def read_database(self):
         url = f"https://api.notion.com/v1/databases/{DB_ID}/query"
         res = requests.request("POST", url, headers=HEADERS)
@@ -43,15 +42,7 @@ class News:
 
     def change_news_status(self, page_id):
         update_url = f"https://api.notion.com/v1/pages/{page_id}"
-        update_data = {
-            "properties": {
-                "Status": {
-                    "select": {
-                        "name": "Опубликовано"
-                    }
-                }
-            }
-        }
+        update_data = {"properties": {"Status": {"select": {"name": "Опубликовано"}}}}
         data = json.dumps(update_data)
         requests.request("PATCH", update_url, headers=HEADERS, data=data)
 
@@ -59,7 +50,7 @@ class News:
         now = datetime.now(pytz.utc)
         cnt = 0
         for _message in message_list:
-            public_time = datetime.fromisoformat(_message['time'])
+            public_time = datetime.fromisoformat(_message["time"])
             if public_time < now:
                 tg_message = me.create_message(_message)
                 bot = NewsBot()

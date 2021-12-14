@@ -1,4 +1,3 @@
-
 # class Notion
 def create_message(message):
     result = f"<b>{message['title']}</b>\n{message['text']}\n{message['source']}\n"
@@ -18,7 +17,7 @@ def convert_row_news(_news):
 
 
 def add_tags_to_text(data):
-    result = ''
+    result = ""
     for i in range(len(data)):
         if not data[i]["text"]["link"]:
             temp = data[i]["text"]["content"]
@@ -34,8 +33,6 @@ def add_tags_to_text(data):
                 temp = f'<span style="color:{data[i]["annotations"]["color"]}">{temp}</span>'
             result = result + temp
         else:
-            result = result + f'<a href=\"{data[i]["text"]["link"]["url"]}\">' \
-                              f'{data[i]["text"]["content"]}</a>'
+            result = result + f'<a href="{data[i]["text"]["link"]["url"]}">' f'{data[i]["text"]["content"]}</a>'
 
     return result
-
