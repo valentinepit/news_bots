@@ -6,6 +6,4 @@ from app.parser.notion import News
 def update_news():
     News().update_news()
 
-@app.task
-def test():
-    print("Hello World")
+

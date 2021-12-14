@@ -12,25 +12,14 @@ from app.tg_bot.aio_bot import NewsBot
 
 logger = logging.getLogger(__name__)
 #
-# NOTION_TOKEN = os.environ["NOTION_TOKEN"]
-# DB_ID = os.environ["BASE_ID"]
-NOTION_TOKEN="secret_R12LKjCdirI7cLN6VJGjcepl04KbZmVAAcOgDPCsdIT"
-DB_ID="cfd16c05655e471aab66a86a34048218"
+NOTION_TOKEN = os.environ["NOTION_TOKEN"]
+DB_ID = os.environ["BASE_ID"]
 
 HEADERS = {
     "Authorization": "Bearer " + NOTION_TOKEN,
     "Notion-Version": "2021-08-16",
     "Content-Type": "application/json",
 }
-
-TABLE_ROWS = ["Status",
-              "Date to publish",
-              "Name",
-              "Notes",
-              "Source",
-              "#",
-              "Addition"
-              ]
 
 
 class News:

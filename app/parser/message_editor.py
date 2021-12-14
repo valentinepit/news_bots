@@ -1,3 +1,5 @@
+
+# class Notion
 def create_message(message):
     result = f"<b>{message['title']}</b>\n{message['text']}\n{message['source']}\n"
 
@@ -10,12 +12,12 @@ def convert_row_news(_news):
     source = f"{_news['Source']['url']}\n"
     public_time = _news["Date to publish"]["date"]["start"]
     title = f"{_news['Name']['title'][0]['text']['content']}\n"
-    text = text_editor(_news["Notes"]["rich_text"]) + "\n"
+    text = add_tags_to_text(_news["Notes"]["rich_text"]) + "\n"
     tags = _news["#"]["rich_text"][0]["plain_text"].split("\n")
     return {"title": title, "source": source, "text": text, "time": public_time, "tags": tags}
 
 
-def text_editor(data):
+def add_tags_to_text(data):
     result = ''
     for i in range(len(data)):
         if not data[i]["text"]["link"]:
