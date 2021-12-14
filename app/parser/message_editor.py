@@ -1,4 +1,4 @@
-# class Notion
+
 def create_message(message):
     result = f"<b>{message['title']}</b>\n{message['text']}\n{message['source']}\n"
 

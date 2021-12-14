@@ -11,7 +11,7 @@ import app.parser.message_editor as me
 from app.tg_bot.aio_bot import NewsBot
 
 logger = logging.getLogger(__name__)
-#
+
 NOTION_TOKEN = os.environ["NOTION_TOKEN"]
 DB_ID = os.environ["BASE_ID"]
 
