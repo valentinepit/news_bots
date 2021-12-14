@@ -21,23 +21,22 @@ HEADERS = {
     "Content-Type": "application/json",
 }
 
+FILTER = json.dumps({"filter": {"property": "Status", "select": {"equals": "Опубликовать"}}})
+
 
 class News:
     def read_database(self):
         url = f"https://api.notion.com/v1/databases/{DB_ID}/query"
-        res = requests.request("POST", url, headers=HEADERS)
+        res = requests.request("POST", url, headers=HEADERS, data=FILTER)
         data = res.json()
         return data
 
     def find_news(self, _data):
         public_list = []
         for item in _data["results"]:
-            if item["properties"][TABLE_ROWS[0]]["select"]["name"] == "Опубликовать":
-                _news = me.convert_row_news(item["properties"])
-                _news["id"] = item["id"]
-                public_list.append(_news)
-            else:
-                continue
+            _news = me.convert_row_news(item["properties"])
+            _news["id"] = item["id"]
+            public_list.append(_news)
         return public_list
 
     def change_news_status(self, page_id):
