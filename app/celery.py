@@ -20,7 +20,7 @@ app.conf.beat_schedule = {
     },
 }
 
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.INFO)
 
 if __name__ == "__main__":
     app.start()
