@@ -1,5 +1,6 @@
 import logging
 import os
+
 from celery import Celery
 from celery.schedules import crontab
 
@@ -11,7 +12,6 @@ app = Celery(
     ],
 )
 
-# Optional configuration, see the application user guide.
 app.conf.beat_schedule = {
     "parse-update_news-every-5-minutes": {
         "task": "app.parser.tasks.update_news",

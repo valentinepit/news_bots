@@ -1,6 +1,5 @@
-
 def create_message(message):
-    result = f"<b>{message['title']}</b>\n{message['text']}\n{message['source']}\n"
+    result = f"<b>{message['title']}</b>" f"\n{message['text']}\n{message['source']}\n"
 
     for tag in message["tags"]:
         result += f"{tag}\n"
@@ -30,9 +29,9 @@ def add_tags_to_text(data):
             if data[i]["annotations"]["underline"]:
                 temp = f"<u>{temp}</u>"
             if data[i]["annotations"]["color"] != "default":
-                temp = f'<span style="color:{data[i]["annotations"]["color"]}">{temp}</span>'
+                temp = f'<span style="color:' f'{data[i]["annotations"]["color"]}">{temp}</span>'
             result = result + temp
         else:
-            result = result + f'<a href="{data[i]["text"]["link"]["url"]}">' f'{data[i]["text"]["content"]}</a>'
+            result = result + f'<a href="' f'{data[i]["text"]["link"]["url"]}">' f'{data[i]["text"]["content"]}</a>'
 
     return result
