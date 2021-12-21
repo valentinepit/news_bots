@@ -13,7 +13,7 @@ lint:
   script:
     - python3.8 -m black -l 120 --exclude "jet|/*.\/migrations.*/" --check ./
     - python3.8 -m flake8 --max-line-length=120 --ignore=E127,E128,W503,E203 --exclude=jet/*,migrations ./
-    - python3.8 -m isort --src apps -l 120 --check-only --diff -s migrations --profile black ./apps
+    - python3.8 -m isort --src app -l 120 --check-only --diff -s migrations --profile black ./app
 
 
 .deploy: &deploy
