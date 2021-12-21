@@ -19,3 +19,7 @@ services:
   celery-beat:
     <<: *base-image
     command: celery -A app.celery:app beat --loglevel=INFO
+
+networks:
+  rabbitmq_net:
+    external: true
