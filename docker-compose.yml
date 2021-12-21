@@ -3,7 +3,7 @@ version: "3.8"
 x-common:
   &base-image
   build:
-    dockerfile: docker/back/Dockerfile
+    dockerfile: Dockerfile
     context: .
   image: news-bot_back:latest
   restart: always
