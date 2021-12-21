@@ -1,0 +1,21 @@
+version: "3.8"
+
+x-common:
+  &base-image
+  build:
+    dockerfile: docker/back/Dockerfile
+    context: .
+  image: news-bot_back:latest
+    restart: always
+    env_file:
+      - .env
+
+
+services:
+  back:
+    <<: *base-image
+    command: celery -A app.celery:app worker --loglevel=INFO --concurrency=1 -n worker1@%h
+
+  celery-beat:
+    <<: *base-image
+    command: celery -A app.celery:app beat --loglevel=INFO

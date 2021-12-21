@@ -1,0 +1,38 @@
+stages:
+  - lint
+  - deploy-prod
+
+lint:
+  stage: lint
+  before_script:
+    - 'which python3.8 || ( apt-get update -y && apt-get install python3.8 )'
+    - 'python3.8 -m pip --version || ( curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py && python3.8 get-pip.py )'
+    - python3.8 -m black --version || python3.8 -m pip install black
+    - python3.8 -m flake8 --version || python3.8 -m pip install flake8
+    - python3.8 -m isort --version || python3.8 -m pip install isort
+  script:
+    - python3.8 -m black -l 120 --exclude "jet|/*.\/migrations.*/" --check ./
+    - python3.8 -m flake8 --max-line-length=120 --ignore=E127,E128,W503,E203 --exclude=jet/*,migrations ./
+    - python3.8 -m isort --src apps -l 120 --check-only --diff -s migrations --profile black ./apps
+
+
+.deploy: &deploy
+  before_script:
+    - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
+    - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
+    - eval $(ssh-agent -s)
+    - echo "$SSH_KEY" | ssh-add -
+  script:
+    - rm -r .git
+    - echo "$ENV" > .env
+    - ssh ${USER}@${IP} rm -r /home/projects/news-bot || true
+    - scp -rp $(pwd) ${USER}@${IP}:/home/projects/news-bot
+    - ssh ${USER}@${IP} docker-compose -f /home/projects/news-bot/docker-compose.yml up --build -d --remove-orphans
+  when: manual
+
+deploy_prod:
+  <<: *deploy
+  stage: deploy-prod
+  only:
+    refs:
+      - master
