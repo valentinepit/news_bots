@@ -7,6 +7,8 @@ x-common:
     context: .
   image: news-bot_back:latest
   restart: always
+  networks:
+    - rabbitmq_net
   env_file:
     - .env
 
