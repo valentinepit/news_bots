@@ -49,7 +49,11 @@ class News:
         now = datetime.now(pytz.utc)
         cnt = 0
         for _message in message_list:
-            public_time = datetime.fromisoformat(_message["time"])
+            try:
+                public_time = datetime.fromisoformat(_message["time"])
+            except TypeError:
+                logger.info(f"Invalid date in message: {_message['title']}")
+                continue
             if public_time < now:
                 tg_message = me.create_message(_message)
                 bot = NewsBot()

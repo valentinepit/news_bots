@@ -1,3 +1,6 @@
+from datetime import datetime
+
+
 def create_message(message):
     result = f"<b>{message['title']}</b>" f"\n{message['text']}\n{message['source']}\n"
 
@@ -7,11 +10,11 @@ def create_message(message):
 
 
 def convert_row_news(_news):
-    source = f"{_news['Source']['url']}\n"
-    public_time = _news["Date to publish"]["date"]["start"]
-    title = f"{_news['Name']['title'][0]['text']['content']}\n"
-    text = add_tags_to_text(_news["Notes"]["rich_text"]) + "\n"
-    tags = _news["#"]["rich_text"][0]["plain_text"].split("\n")
+    source = f"{_news['Source']['url']}\n" if _news['Source']['url'] else ""
+    public_time = _news["Date to publish"]["date"]["start"] if _news["Date to publish"]["date"] else datetime.now()
+    text = add_tags_to_text(_news["Notes"]["rich_text"]) + "\n" if _news["Notes"]["rich_text"] != [] else ""
+    title = f"{_news['Name']['title'][0]['text']['content']}\n" if _news["Name"]["title"] else ""
+    tags = _news["#"]["rich_text"][0]["plain_text"].split("\n") if _news["#"]["rich_text"] != [] else ""
     return {"title": title, "source": source, "text": text, "time": public_time, "tags": tags}
 
 
