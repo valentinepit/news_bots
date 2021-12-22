@@ -1,0 +1,27 @@
+version: "3.8"
+
+x-common:
+  &base-image
+  build:
+    dockerfile: Dockerfile
+    context: .
+  image: news-bot_back:latest
+  restart: always
+  networks:
+    - rabbitmq_net
+  env_file:
+    - .env
+
+
+services:
+  back:
+    <<: *base-image
+    command: celery -A app.celery:app worker --loglevel=INFO --concurrency=1 -n worker1@%h
+
+  celery-beat:
+    <<: *base-image
+    command: celery -A app.celery:app beat --loglevel=INFO
+
+networks:
+  rabbitmq_net:
+    external: true
