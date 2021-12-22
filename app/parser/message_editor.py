@@ -10,7 +10,7 @@ def create_message(message):
 
 
 def convert_row_news(_news):
-    source = f"{_news['Source']['url']}\n" if _news['Source']['url'] else ""
+    source = f"{_news['Source']['url']}\n" if _news["Source"]["url"] else ""
     public_time = _news["Date to publish"]["date"]["start"] if _news["Date to publish"]["date"] else datetime.now()
     text = add_tags_to_text(_news["Notes"]["rich_text"]) + "\n" if _news["Notes"]["rich_text"] != [] else ""
     title = f"{_news['Name']['title'][0]['text']['content']}\n" if _news["Name"]["title"] else ""
