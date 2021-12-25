@@ -57,7 +57,10 @@ class News:
             if public_time < now:
                 tg_message = me.create_message(_message)
                 bot = NewsBot()
-                asyncio.run(bot.send_message(tg_message))
+                if tg_message["photo"]:
+                    asyncio.run(bot.send_photo(tg_message["text"], tg_message["photo"]))
+                else:
+                    asyncio.run(bot.send_message(tg_message["text"]))
                 cnt += 1
                 self.change_news_status(_message["id"])
         return cnt
