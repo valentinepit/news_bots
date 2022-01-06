@@ -11,6 +11,7 @@ dp = Dispatcher(bot)
 
 
 class NewsBot:
+
     @dp.message_handler()
     async def send_photo(self, message, photo):
         await bot.send_photo(channel_id, photo=photo, caption=message, parse_mode=types.ParseMode.HTML)

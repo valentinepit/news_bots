@@ -15,6 +15,9 @@ logger = logging.getLogger(__name__)
 NOTION_TOKEN = os.environ["NOTION_TOKEN"]
 DB_ID = os.environ["BASE_ID"]
 
+bot_token = os.environ["TG_TOKEN"]
+channel_id = os.environ["CHANNEL_ID"]
+
 HEADERS = {
     "Authorization": "Bearer " + NOTION_TOKEN,
     "Notion-Version": "2021-08-16",
