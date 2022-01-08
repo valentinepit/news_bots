@@ -3,7 +3,11 @@ import asyncio
 import os
 from datetime import datetime, timedelta
 
+from app.tg_bot.aio_bot import NewsBot
+
 TOKEN_AUTH = os.environ['DISCORD_TOKEN']
+TG_TOKEN = os.environ['TG_ANALYTICS_TOKEN']
+CHANNEL_ID = os.environ['ANALYTICS_CHANNEL_ID']
 
 client = discord.Client()
 
@@ -19,14 +23,28 @@ channels = {
 @client.event
 async def on_ready():
     print(f'We have logged in as {client}')
+    await collect_messages_from_channels()
+    await client.close()
+
+
+@client.event
+async def collect_messages_from_channels():
     now = datetime.now()
+    bot = NewsBot(TG_TOKEN, CHANNEL_ID)
+
     for channel_name, channel_id in channels.items():
         channel = client.get_channel(channel_id)
         messages = await channel.history(limit=2).flatten()
         for msg in messages:
-            if now < msg.created_at + timedelta(minutes=10):
-                print(f'{channel_name}\n{msg.created_at}')
-                print('-' * 50)
-    await client.close()
+            # INFO: change > to < in prod
+            if now > msg.created_at + timedelta(minutes=10):
+                try:
+                    await bot.send_message(f'{channel_name}\n{msg.content}')
+                except Exception as e:
+                    print(e)
+                    await bot.send_message(f'{channel_name}\n{msg.content}', parse_mode='Markdown')
+                    print(f'{channel_name}\n{msg.content}')
+                    print('-' * 50)
+
 
 client.run(TOKEN_AUTH, bot=False)

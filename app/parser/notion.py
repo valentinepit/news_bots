@@ -15,8 +15,8 @@ logger = logging.getLogger(__name__)
 NOTION_TOKEN = os.environ["NOTION_TOKEN"]
 DB_ID = os.environ["BASE_ID"]
 
-bot_token = os.environ["TG_TOKEN"]
-channel_id = os.environ["CHANNEL_ID"]
+TG_TOKEN = os.environ["TG_TOKEN"]
+CHANNEL_ID = os.environ["CHANNEL_ID"]
 
 HEADERS = {
     "Authorization": "Bearer " + NOTION_TOKEN,
@@ -60,7 +60,7 @@ class News:
                 continue
             if public_time < now:
                 tg_message = me.create_message(_message)
-                bot = NewsBot()
+                bot = NewsBot(TG_TOKEN, CHANNEL_ID)
                 if tg_message["photo"]:
                     asyncio.run(bot.send_photo(tg_message["text"], tg_message["photo"]))
                 else:
