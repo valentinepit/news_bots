@@ -28,6 +28,7 @@ FILTER = json.dumps({"filter": {"property": "Status", "select": {"equals": "Оп
 
 
 class News:
+
     def read_database(self):
         url = f"https://api.notion.com/v1/databases/{DB_ID}/query"
         res = requests.request("POST", url, headers=HEADERS, data=FILTER)
