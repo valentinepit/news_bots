@@ -7,7 +7,7 @@ from datetime import datetime
 import pytz
 import requests
 
-import app.parser.message_editor as me
+import app.notion.message_editor as me
 from app.tg_bot.aio_bot import NewsBot
 
 logger = logging.getLogger(__name__)
@@ -28,7 +28,6 @@ FILTER = json.dumps({"filter": {"property": "Status", "select": {"equals": "Оп
 
 
 class News:
-
     def read_database(self):
         url = f"https://api.notion.com/v1/databases/{DB_ID}/query"
         res = requests.request("POST", url, headers=HEADERS, data=FILTER)
@@ -52,6 +51,7 @@ class News:
     def public_messages(self, message_list):
         now = datetime.now(pytz.utc)
         cnt = 0
+        bot = NewsBot(TG_TOKEN, CHANNEL_ID)
         for _message in message_list:
             try:
                 public_time = datetime.fromisoformat(_message["time"])
@@ -60,13 +60,13 @@ class News:
                 continue
             if public_time < now:
                 tg_message = me.create_message(_message)
-                bot = NewsBot(TG_TOKEN, CHANNEL_ID)
                 if tg_message["photo"]:
                     asyncio.run(bot.send_photo(tg_message["text"], tg_message["photo"]))
                 else:
                     asyncio.run(bot.send_message(tg_message["text"]))
                 cnt += 1
                 self.change_news_status(_message["id"])
+        asyncio.run(bot.close_connection())
         return cnt
 
     def update_news(self):

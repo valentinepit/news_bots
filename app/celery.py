@@ -7,14 +7,17 @@ from celery.schedules import crontab
 app = Celery(
     "app",
     broker=os.environ["CELERY_BROKER_URL"],
-    include=[
-        "app.parser.tasks",
-    ],
+    include=["app.notion.tasks", "app.discord.tasks"],
 )
 
 app.conf.beat_schedule = {
-    "parse-update_news-every-5-minutes": {
-        "task": "app.parser.tasks.update_news",
+    "notion-update_news-every-5-minutes": {
+        "task": "app.notion.tasks.update_news",
+        "schedule": crontab(minute="*/5"),
+        "options": {"expires": 60 * 5},
+    },
+    "discord-update_news-every-5-minutes": {
+        "task": "app.discord.tasks.update",
         "schedule": crontab(minute="*/5"),
         "options": {"expires": 60 * 5},
     },

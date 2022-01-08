@@ -1,5 +1,5 @@
 from app.celery import app
-from app.parser.notion import News
+from app.notion.notion import News
 
 
 @app.task

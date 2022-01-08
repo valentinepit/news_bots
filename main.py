@@ -1,6 +1,6 @@
 import logging
 
-from app.parser.tasks import update_news
+from app.notion.tasks import update_news
 
 logging.basicConfig(level=logging.INFO)
 
