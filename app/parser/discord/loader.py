@@ -1,7 +1,7 @@
-import discord
-import asyncio
 import os
 from datetime import datetime, timedelta
+
+import discord
 
 from app.tg_bot.aio_bot import NewsBot
 
