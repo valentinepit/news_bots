@@ -17,12 +17,12 @@ logger = logging.getLogger(__name__)
 client = discord.Client()
 
 channels = {
-    "Yarn Talk": [735617936206594249, "734804446353031319"],
-    "BENT Finance": [913455858699079740, "913416871380938814"],
-    "Angle Protocol": [835068536270487553, "835066439891157012"],
-    "Stake DAO": [803667081978708057, "802495248563044372"],
-    "Curve Finance": [729810461888872509, "729808684359876718"],
-    "Frax Finance": [789823672717541376, "789823126966894612"],
+    "Yarn Talk": 735617936206594249,
+    "BENT Finance": 913455858699079740,
+    "Angle Protocol": 835068536270487553,
+    "Stake DAO": 803667081978708057,
+    "Curve Finance": 729810461888872509,
+    "Frax Finance": 789823672717541376,
 }
 
 
@@ -37,21 +37,22 @@ async def on_ready():
 @client.event
 async def collect_messages_from_channels():
     now = datetime.now()
+    time_shift = now - timedelta(minutes=10)
     bot = NewsBot(TG_TOKEN, CHANNEL_ID)
     cnt = 0
     for channel_name, channel_id in channels.items():
-        channel = client.get_channel(channel_id[0])
+        channel = client.get_channel(channel_id)
         logger.info(f"connected to {channel_name}")
-        messages = await channel.history(limit=3).flatten()
+        messages = await channel.history(after=time_shift).flatten()
         for msg in messages:
-            if now > msg.created_at + timedelta(minutes=10):
-                message = message_editor.convert_row_news(msg.content, channel_id[1])
-                try:
-                    await bot.send_message(f"{channel.guild}\n{message}")
-                # TODO: find exception
-                except TelegramBadRequest:
-                    await bot.send_message(f"{channel_name}\n{message}", parse_mode="Markdown")
-                cnt += 1
+            message = message_editor.convert_row_news(msg.content, channel.guild)
+            created_at = msg.created_at.strftime("%m/%d/%Y, %H:%M:%S")
+            try:
+                await bot.send_message(f"{channel.guild}\n{created_at}\n{message}")
+            except TelegramBadRequest:
+                await bot.send_message(f"{channel_name}\n{created_at}\n{message}", parse_mode="Markdown")
+            cnt += 1
+
     await bot.close_connection()
     return cnt
 

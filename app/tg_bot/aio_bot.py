@@ -1,4 +1,6 @@
 from aiogram import Bot, Dispatcher
+from aiogram.exceptions import TelegramRetryAfter
+from time import sleep
 
 
 class NewsBot:
@@ -12,8 +14,11 @@ class NewsBot:
         await self.bot.send_photo(self.ch_id, photo=photo, caption=message, parse_mode="HTML")
 
     async def send_message(self, message, parse_mode="HTML"):
-        # print(message)
-        await self.bot.send_message(self.ch_id, message, parse_mode=parse_mode)
+        try:
+            await self.bot.send_message(self.ch_id, message, parse_mode=parse_mode)
+        except TelegramRetryAfter:
+            sleep(50)
+            await self.bot.send_message(self.ch_id, message, parse_mode=parse_mode)
 
     async def close_connection(self):
         await self.bot.session.close()

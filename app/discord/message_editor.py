@@ -18,5 +18,5 @@ def delete_tags(msg_text):
 
 
 def change_channel_link(_link, _id):
-    result = "https://discord.com/channels/" + _id + "/" + _link.lstrip("<#").rstrip(">")
+    result = "https://discord.com/channels/" + str(_id.id) + "/" + _link.lstrip("<#").rstrip(">")
     return result
