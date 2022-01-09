@@ -2,9 +2,9 @@ import logging
 import os
 from datetime import datetime, timedelta
 
-import discord
 from aiogram.exceptions import TelegramBadRequest
 
+import discord
 from app.discord import message_editor
 from app.tg_bot.aio_bot import NewsBot
 
