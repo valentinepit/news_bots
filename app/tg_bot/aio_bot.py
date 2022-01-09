@@ -1,6 +1,7 @@
+from time import sleep
+
 from aiogram import Bot, Dispatcher
 from aiogram.exceptions import TelegramRetryAfter
-from time import sleep
 
 
 class NewsBot:
