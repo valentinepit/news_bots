@@ -18,6 +18,8 @@ DB_ID = os.environ["BASE_ID"]
 TG_TOKEN = os.environ["TG_TOKEN"]
 CHANNEL_ID = os.environ["CHANNEL_ID"]
 
+BASE_URL = "https://api.notion.com/v1/"
+
 HEADERS = {
     "Authorization": "Bearer " + NOTION_TOKEN,
     "Notion-Version": "2021-08-16",
@@ -29,7 +31,7 @@ FILTER = json.dumps({"filter": {"property": "Status", "select": {"equals": "Оп
 
 class News:
     def read_database(self):
-        url = f"https://api.notion.com/v1/databases/{DB_ID}/query"
+        url = f"{BASE_URL}databases/{DB_ID}/query"
         res = requests.request("POST", url, headers=HEADERS, data=FILTER)
         data = res.json()
         return data
@@ -43,7 +45,7 @@ class News:
         return public_list
 
     def change_news_status(self, page_id):
-        update_url = f"https://api.notion.com/v1/pages/{page_id}"
+        update_url = f"{BASE_URL}pages/{page_id}"
         update_data = {"properties": {"Status": {"select": {"name": "Опубликовано"}}}}
         data = json.dumps(update_data)
         requests.request("PATCH", update_url, headers=HEADERS, data=data)

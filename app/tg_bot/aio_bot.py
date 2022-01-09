@@ -12,8 +12,8 @@ class NewsBot:
         await self.bot.send_photo(self.ch_id, photo=photo, caption=message, parse_mode="HTML")
 
     async def send_message(self, message, parse_mode="HTML"):
-        print(parse_mode)
+        # print(message)
         await self.bot.send_message(self.ch_id, message, parse_mode=parse_mode)
 
     async def close_connection(self):
-        await self.bot.close()
+        await self.bot.session.close()

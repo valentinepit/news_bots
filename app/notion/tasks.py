@@ -1,7 +1,7 @@
 from app.celery import app
-from app.notion.notion import News
+from app.notion.loader import News
 
 
 @app.task
-def update_news():
+def get_news():
     News().update_news()

@@ -12,13 +12,13 @@ app = Celery(
 
 app.conf.beat_schedule = {
     "notion-update_news-every-5-minutes": {
-        "task": "app.notion.tasks.update_news",
+        "task": "app.notion.tasks.get_news",
         "schedule": crontab(minute="*/5"),
         "options": {"expires": 60 * 5},
     },
-    "discord-update_news-every-5-minutes": {
-        "task": "app.discord.tasks.update",
-        "schedule": crontab(minute="*/5"),
+    "discord-update_news-every-10-minutes": {
+        "task": "app.discord.tasks.get_news",
+        "schedule": crontab(minute="*/10"),
         "options": {"expires": 60 * 5},
     },
 }

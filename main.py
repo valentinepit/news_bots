@@ -1,8 +1,11 @@
 import logging
 
-from app.notion.tasks import update_news
+from app.discord.tasks import get_news as discord
+from app.notion.tasks import get_news as notion
+
 
 logging.basicConfig(level=logging.INFO)
 
 if __name__ == "__main__":
-    update_news()
+    notion()
+    discord()

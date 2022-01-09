@@ -3,5 +3,5 @@ from app.discord.loader import update_news
 
 
 @app.task
-def news():
+def get_news():
     update_news()
