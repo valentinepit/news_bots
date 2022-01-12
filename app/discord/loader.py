@@ -3,8 +3,8 @@ import os
 from datetime import datetime, timedelta
 
 from aiogram.exceptions import TelegramBadRequest
+from discord.ext import commands
 
-import discord
 from app.discord import message_editor
 from app.tg_bot.aio_bot import NewsBot
 
@@ -14,7 +14,7 @@ CHANNEL_ID = os.environ["ANALYTICS_CHANNEL_ID"]
 
 logger = logging.getLogger(__name__)
 
-client = discord.Client()
+client = commands.Bot(command_prefix='!', reconnect=True)
 
 channels = {
     "Yarn Talk": 735617936206594249,
@@ -23,7 +23,12 @@ channels = {
     "Stake DAO": 803667081978708057,
     "Curve Finance": 729810461888872509,
     "Frax Finance": 789823672717541376,
+    "Test": 928618938743541823
 }
+
+
+def update_news():
+    client.run(TOKEN_AUTH, bot=False)
 
 
 @client.event
@@ -31,10 +36,8 @@ async def on_ready():
     logger.info(f"We have logged in as {client}")
     cnt = await collect_messages_from_channels()
     logger.info(f"{cnt} news loaded to tg")
-    await client.close()
 
 
-@client.event
 async def collect_messages_from_channels():
     now = datetime.now()
     time_shift = now - timedelta(minutes=10)
@@ -53,9 +56,5 @@ async def collect_messages_from_channels():
                 await bot.send_message(f"{channel_name}\n{created_at}\n{message}", parse_mode="Markdown")
             cnt += 1
 
-    await bot.close_connection()
     return cnt
 
-
-def update_news():
-    client.run(TOKEN_AUTH, bot=False)
