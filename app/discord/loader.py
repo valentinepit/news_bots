@@ -3,10 +3,11 @@ import os
 from datetime import datetime, timedelta
 
 from aiogram.exceptions import TelegramBadRequest
-from discord.ext import commands
 
 from app.discord import message_editor
 from app.tg_bot.aio_bot import NewsBot
+from discord.ext import commands
+
 
 TOKEN_AUTH = os.environ["DISCORD_TOKEN"]
 TG_TOKEN = os.environ["TG_ANALYTICS_TOKEN"]
