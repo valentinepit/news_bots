@@ -7,8 +7,13 @@ from celery.schedules import crontab
 app = Celery(
     "app",
     broker=os.environ["CELERY_BROKER_URL"],
-    include=["app.notion.tasks", "app.discord.tasks"],
+    include=[
+        "app.discord.tasks",
+        "app.notion.tasks",
+    ],
 )
+
+app.conf.worker_prefetch_multiplier = 1
 
 app.conf.beat_schedule = {
     "notion-update_news-every-5-minutes": {

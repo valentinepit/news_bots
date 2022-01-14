@@ -14,7 +14,7 @@ CHANNEL_ID = os.environ["ANALYTICS_CHANNEL_ID"]
 
 logger = logging.getLogger(__name__)
 
-client = commands.Bot(command_prefix='!', reconnect=True)
+client = commands.Bot(command_prefix="!", reconnect=True)
 
 channels = {
     "Yarn Talk": 735617936206594249,
@@ -23,7 +23,7 @@ channels = {
     "Stake DAO": 803667081978708057,
     "Curve Finance": 729810461888872509,
     "Frax Finance": 789823672717541376,
-    "Test": 928618938743541823
+    "Test": 928618938743541823,
 }
 
 
@@ -57,4 +57,3 @@ async def collect_messages_from_channels():
             cnt += 1
 
     return cnt
-
