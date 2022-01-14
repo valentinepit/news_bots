@@ -33,7 +33,7 @@ class News:
     def read_database(self):
         url = f"{BASE_URL}databases/{DB_ID}/query"
         res = requests.request("POST", url, headers=HEADERS, data=FILTER)
-        logger.info(f"We have logged in to Notion")
+        logger.info("We have logged in to Notion")
         data = res.json()
         return data
 
