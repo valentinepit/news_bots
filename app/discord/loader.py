@@ -30,8 +30,11 @@ last_check = None
 
 async def update_news():
     client = commands.Bot(command_prefix="!", reconnect=True)
-    await client.login(TOKEN_AUTH, bot=False)
-    await collect_messages_from_channels(client)
+    try:
+        await client.login(TOKEN_AUTH, bot=False)
+        await collect_messages_from_channels(client)
+    finally:
+        await client.close()
 
 
 async def collect_messages_from_channels(client):
