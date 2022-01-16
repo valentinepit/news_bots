@@ -1,3 +1,4 @@
+import asyncio
 import logging
 
 from app.discord.tasks import get_news as discord
