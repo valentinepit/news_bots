@@ -4,9 +4,10 @@ import logging
 import os
 from datetime import datetime
 
-import app.notion.message_editor as me
 import pytz
 import requests
+
+import app.notion.message_editor as me
 from app.tg_bot.aio_bot import NewsBot
 
 logger = logging.getLogger(__name__)
