@@ -4,10 +4,9 @@ import logging
 import os
 from datetime import datetime
 
+import app.notion.message_editor as me
 import pytz
 import requests
-
-import app.notion.message_editor as me
 from app.tg_bot.aio_bot import NewsBot
 
 logger = logging.getLogger(__name__)
@@ -75,4 +74,4 @@ class News:
         notion_db = self.read_database()
         news = self.find_news(notion_db)
         cnt = self.public_messages(news)
-        logger.info(f"{cnt} news loaded to tg")
+        logger.info(f"{cnt} news loaded to tg from Notion")

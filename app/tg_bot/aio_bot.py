@@ -1,5 +1,5 @@
 from aiogram import Bot, Dispatcher
-from aiogram.utils.exceptions import RetryAfter
+from aiogram.utils.exceptions import BadRequest
 
 
 class NewsBot:
@@ -15,8 +15,8 @@ class NewsBot:
     async def send_message(self, message, parse_mode="HTML"):
         try:
             await self.bot.send_message(self.ch_id, message, parse_mode=parse_mode)
-        except RetryAfter:
-            await self.bot.send_message(self.ch_id, message, parse_mode=parse_mode)
+        except BadRequest:
+            await self.bot.send_message(self.ch_id, message, parse_mode="Markdown")
 
     async def disconnect(self):
         await self.bot.session.close()
