@@ -20,7 +20,10 @@ channels = {
     "Stake DAO": 803667081978708057,
     "Curve Finance": 729810461888872509,
     "Frax Finance": 789823672717541376,
+    "Test": 928618938743541823,
 }
+
+last_check = None
 
 
 async def update_news():
@@ -35,7 +38,8 @@ async def update_news():
 
 async def collect_messages_from_channels(client):
     now = datetime.now()
-    last_check = now - timedelta(minutes=10)
+    global last_check
+    last_check = last_check or now - timedelta(minutes=10)
     bot = NewsBot(TG_TOKEN, CHANNEL_ID)
     cnt = 0
     for channel_name, channel_id in channels.items():
@@ -52,4 +56,5 @@ async def collect_messages_from_channels(client):
             created_at = msg.created_at.strftime("%m/%d/%Y, %H:%M:%S")
             await bot.send_message(f"{channel_name}\n{created_at}\n{message}")
             cnt += 1
+    last_check = now
     return cnt
