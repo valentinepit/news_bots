@@ -19,6 +19,7 @@ channels = {
     "Angle Protocol": 835068536270487553,
     "Stake DAO": 803667081978708057,
     "Curve Finance": 729810461888872509,
+    "Frax Finance": 789823672717541376,
 }
 
 
