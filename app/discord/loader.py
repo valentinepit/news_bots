@@ -20,7 +20,6 @@ channels = {
     "Stake DAO": 803667081978708057,
     "Curve Finance": 729810461888872509,
     "Frax Finance": 789823672717541376,
-    "Test": 928618938743541823,
 }
 
 last_check = None
