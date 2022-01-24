@@ -40,6 +40,9 @@ async def collect_messages_from_channels(client):
     global last_check
     last_check = last_check or now - timedelta(minutes=10)
     bot = NewsBot(TG_TOKEN, CHANNEL_ID)
+    channel_for_add, channels_for_delete = await bot.get_updates()
+    update_channels(channel_for_add, channels_for_delete)
+
     cnt = 0
     for channel_name, channel_id in channels.items():
         try:
@@ -57,3 +60,13 @@ async def collect_messages_from_channels(client):
             cnt += 1
     last_check = now
     return cnt
+
+
+def update_channels(add_ch, del_ch):
+    for ch in add_ch:
+        channels[ch["name"]] = ch["id"]
+        logger.info(f"Added channel {ch['name']} with id {ch['id']}")
+    for ch in del_ch:
+        if ch in channels:
+            deleted_channel = channels.pop(ch)
+            logger.info(f"Deleted channel {ch} with id {deleted_channel}")
