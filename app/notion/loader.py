@@ -69,6 +69,7 @@ class News:
                     asyncio.run(bot.send_message(tg_message["text"]))
                 cnt += 1
                 self.change_news_status(_message["id"])
+        asyncio.run(bot.disconnect())
         return cnt
 
     def update_news(self):

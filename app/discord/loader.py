@@ -59,6 +59,7 @@ async def collect_messages_from_channels(client):
             await bot.send_message(f"{channel_name}\n{created_at}\n{message}")
             cnt += 1
     last_check = now
+    await bot.disconnect()
     return cnt
 
 
