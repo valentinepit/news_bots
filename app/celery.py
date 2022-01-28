@@ -8,14 +8,22 @@ app = Celery(
     "app",
     broker=os.environ["CELERY_BROKER_URL"],
     include=[
-        "app.parser.tasks",
+        "app.discord.tasks",
+        "app.notion.tasks",
     ],
 )
 
+app.conf.worker_prefetch_multiplier = 1
+
 app.conf.beat_schedule = {
-    "parse-update_news-every-5-minutes": {
-        "task": "app.parser.tasks.update_news",
+    "notion-update_news-every-5-minutes": {
+        "task": "app.notion.tasks.get_news",
         "schedule": crontab(minute="*/5"),
+        "options": {"expires": 60 * 5},
+    },
+    "discord-update_news-every-10-minutes": {
+        "task": "app.discord.tasks.get_news",
+        "schedule": crontab(minute="*/10"),
         "options": {"expires": 60 * 5},
     },
 }

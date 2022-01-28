@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import List
 
 
 def create_message(message):
@@ -39,3 +40,13 @@ def add_tags_to_text(data):
             result = result + f'<a href="' f'{item["text"]["link"]["url"]}">' f'{item["text"]["content"]}</a>'
 
     return result
+
+
+def message_cutter(max_length: int, message: str) -> List:
+    messages = []
+    while len(message) >= max_length:
+        last_point_index = message[:max_length].rindex(". ") + 1
+        messages.append(message[:last_point_index])
+        message = message[last_point_index:]
+    messages.append(message)
+    return messages
