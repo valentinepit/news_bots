@@ -8,7 +8,7 @@ import pytz
 import requests
 
 import app.notion.message_editor as me
-from app.tg_bot.aio_bot import NewsBot
+from app.tg_bot.aio_bot import NotionBot
 
 logger = logging.getLogger(__name__)
 
@@ -54,7 +54,7 @@ class News:
     def public_messages(self, message_list):
         now = datetime.now(pytz.utc)
         cnt = 0
-        bot = NewsBot(TG_TOKEN, CHANNEL_ID)
+        bot = NotionBot()
         for _message in message_list:
             try:
                 public_time = datetime.fromisoformat(_message["time"])

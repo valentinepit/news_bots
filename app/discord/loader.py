@@ -1,9 +1,10 @@
+import json
 import logging
 import os
 from datetime import datetime, timedelta
 
 from app.discord import message_editor
-from app.tg_bot.aio_bot import NewsBot
+from app.tg_bot.aio_bot import DiscordBot
 from discord.errors import Forbidden
 from discord.ext import commands
 
@@ -13,16 +14,10 @@ CHANNEL_ID = os.environ["ANALYTICS_CHANNEL_ID"]
 
 logger = logging.getLogger(__name__)
 
-channels = {
-    "Yarn Talk": 735617936206594249,
-    "BENT Finance": 913455858699079740,
-    "Angle Protocol": 835068536270487553,
-    "Stake DAO": 803667081978708057,
-    "Curve Finance": 729810461888872509,
-    "Frax Finance": 789823672717541376,
-}
-
 last_check = None
+
+channels_list_path = "app/discord/discord_channels.json"
+channels = json.loads(open(channels_list_path, "r").read())
 
 
 async def update_news():
@@ -39,9 +34,10 @@ async def collect_messages_from_channels(client):
     now = datetime.now()
     global last_check
     last_check = last_check or now - timedelta(minutes=10)
-    bot = NewsBot(TG_TOKEN, CHANNEL_ID)
+    bot = DiscordBot()
     channel_for_add, channels_for_delete = await bot.get_updates()
-    update_channels(channel_for_add, channels_for_delete)
+    if await update_channels(channel_for_add, channels_for_delete):
+        await bot.send_channels_list()
 
     cnt = 0
     for channel_name, channel_id in channels.items():
@@ -63,11 +59,20 @@ async def collect_messages_from_channels(client):
     return cnt
 
 
-def update_channels(add_ch, del_ch):
+async def update_channels(add_ch, del_ch):
+    if not add_ch and not del_ch:
+        return None
     for ch in add_ch:
-        channels[ch["name"]] = ch["id"]
+        channels[ch["name"]] = int(ch["id"])
         logger.info(f"Added channel {ch['name']} with id {ch['id']}")
     for ch in del_ch:
         if ch in channels:
-            deleted_channel = channels.pop(ch)
-            logger.info(f"Deleted channel {ch} with id {deleted_channel}")
+            try:
+                deleted_channel = channels.pop(ch)
+                logger.info(f"Deleted channel {ch} with id {deleted_channel}")
+            except KeyError:
+                logger.info(f"Can't delete channel {ch}")
+    with open(channels_list_path, "w", encoding="utf-8") as ch_file:
+        json.dump(channels, ch_file, ensure_ascii=False)
+
+    return True
