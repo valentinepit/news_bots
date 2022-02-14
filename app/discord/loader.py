@@ -3,6 +3,8 @@ import logging
 import os
 from datetime import datetime, timedelta
 
+from typing import Dict
+
 from app.discord import message_editor
 from app.tg_bot.aio_bot import DiscordBot
 from discord.errors import Forbidden
@@ -17,7 +19,7 @@ logger = logging.getLogger(__name__)
 last_check = None
 
 channels_list_path = "app/discord/discord_channels.json"
-channels = json.loads(open(channels_list_path, "r").read())
+channels = {}
 
 
 async def update_news():
@@ -32,8 +34,12 @@ async def update_news():
 
 async def collect_messages_from_channels(client):
     now = datetime.now()
-    global last_check
-    last_check = last_check or now - timedelta(minutes=10)
+    global last_check, channels
+    channels = json.loads(open(channels_list_path, "r").read())
+    last_check = last_check or now - timedelta(minutes=1)
+
+    logger.info(f"last_chek = {last_check}")
+
     bot = DiscordBot()
     channel_for_add, channels_for_delete = await bot.get_updates()
     if await update_channels(channel_for_add, channels_for_delete):
@@ -59,7 +65,7 @@ async def collect_messages_from_channels(client):
     return cnt
 
 
-async def update_channels(add_ch, del_ch):
+async def update_channels(add_ch: Dict, del_ch: str):
     if not add_ch and not del_ch:
         return None
     for ch in add_ch:
@@ -74,5 +80,4 @@ async def update_channels(add_ch, del_ch):
                 logger.info(f"Can't delete channel {ch}")
     with open(channels_list_path, "w", encoding="utf-8") as ch_file:
         json.dump(channels, ch_file, ensure_ascii=False)
-
     return True

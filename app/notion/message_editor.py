@@ -16,7 +16,10 @@ def convert_row_news(_news):
     text = add_tags_to_text(_news["Notes"]["rich_text"]) + "\n" if _news["Notes"]["rich_text"] != [] else ""
     title = f"{_news['Name']['title'][0]['text']['content']}\n" if _news["Name"]["title"] else ""
     tags = _news["#"]["rich_text"][0]["plain_text"].split("\n") if _news["#"]["rich_text"] != [] else ""
-    picture = _news["Picture"]["files"][0]["file"]["url"] if _news["Picture"]["files"] != [] else False
+    try:
+        picture = _news["Picture"]["files"][0]["file"]["url"] if _news["Picture"]["files"] != [] else False
+    except KeyError:
+        picture = _news["Picture"]["files"][0]["external"]["url"]
     return {"title": title, "source": source, "text": text, "time": public_time, "tags": tags, "picture": picture}
 
 

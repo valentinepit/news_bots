@@ -27,6 +27,7 @@ HEADERS = {
 }
 
 FILTER = json.dumps({"filter": {"property": "Status", "select": {"equals": "Опубликовать"}}})
+# FILTER = json.dumps({"filter": {"property": "Status", "select": {"equals": "Опубликовано"}}})
 
 
 class News:
