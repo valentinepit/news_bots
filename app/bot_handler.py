@@ -19,7 +19,7 @@ bot = Bot(token=TG_TOKEN)
 dp = Dispatcher(bot)
 
 logger = logging.getLogger(__name__)
-discord_channels_path = "app/discord_bot/discord_channels.json"
+discord_channels_path = "discord_bot/discord_channels.json"
 
 
 @dp.message_handler(commands=["start"])
@@ -104,7 +104,7 @@ async def send_multipart_message(messages, channel_id, parse_mode="HTML", disabl
 
 async def scheduler():
     aioschedule.every(5).minutes.do(update_discord_news)
-    aioschedule.every(60).seconds.do(update_notion_news)
+    aioschedule.every(10).minutes.do(update_notion_news)
     while True:
         await aioschedule.run_pending()
         await asyncio.sleep(1)

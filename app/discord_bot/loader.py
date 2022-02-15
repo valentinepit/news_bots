@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 
 last_check = None
 
-channels_list_path = "app/discord_bot/discord_channels.json"
+channels_list_path = "discord_bot/discord_channels.json"
 channels = {}
 
 

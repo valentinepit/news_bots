@@ -3,7 +3,7 @@ import logging
 import os
 from datetime import datetime
 
-import message_editor as me
+import notion.message_editor as me
 import pytz
 import requests
 
