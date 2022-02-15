@@ -6,7 +6,6 @@ from datetime import datetime, timedelta
 from typing import Dict
 
 from discord_bot import message_editor
-from aio_bot import DiscordBot
 from discord.errors import Forbidden
 from discord.ext import commands
 
@@ -30,7 +29,6 @@ async def update_news():
         _news = await collect_messages_from_channels(client)
     finally:
         await client.close()
-    # logger.info(f"{0} news loaded to tg from Discord")
     logger.info(f"{len(_news)} news loaded from Discord")
     return _news
 
@@ -38,15 +36,10 @@ async def update_news():
 async def collect_messages_from_channels(client):
     now = datetime.now()
     messages = []
-    # cnt = 0
     global last_check, channels
     channels = json.loads(open(channels_list_path, "r").read())
-    last_check = last_check or now - timedelta(minutes=1)
+    last_check = last_check or now - timedelta(minutes=10)
     logger.info(f"last_chek = {last_check}")
-    # bot = DiscordBot()
-    # channel_for_add, channels_for_delete = await bot.get_updates()
-    # if await update_channels(channel_for_add, channels_for_delete):
-    #     await bot.send_channels_list()
     for channel_name, channel_id in channels.items():
         try:
             channel = await client.fetch_channel(channel_id)
@@ -55,14 +48,12 @@ async def collect_messages_from_channels(client):
             continue
 
         logger.info(f"connected to {channel_name}")
-        messages = await channel.history(after=last_check).flatten()
-        # for msg in messages:
-        #     message = message_editor.convert_row_news(msg.content, channel.guild)
-        #     created_at = msg.created_at.strftime("%m/%d/%Y, %H:%M:%S")
-        #     # await bot.send_message(f"{channel_name}\n{created_at}\n{message}")
-        #     cnt += 1
+        msgs = await channel.history(after=last_check).flatten()
+        for msg in msgs:
+            message = message_editor.convert_row_news(msg.content, channel.guild)
+            created_at = msg.created_at.strftime("%m/%d/%Y, %H:%M:%S")
+            messages.append(f"{channel_name}\n{created_at}\n{message}")
     last_check = now
-    # await bot.disconnect()
     return messages
 
 

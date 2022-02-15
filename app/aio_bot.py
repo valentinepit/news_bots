@@ -20,29 +20,29 @@ class NewsBot:
         self.bot = Bot(token=self.token)
         self.dp = Dispatcher(self.bot)
 
-    async def send_photo(self, message, photo):
-        messages = [message]
-        if len(message) > 1024:
-            messages = message_cutter(1024, message)
-        await self.bot.send_photo(self.channel_id, photo=photo, caption=messages[0], parse_mode="HTML")
-        await self.send_multipart_message(messages[1:], disable_web_page_preview=True)
-
-    async def send_message(self, message, parse_mode="HTML"):
-        messages = [message]
-        if len(message) > 4096:
-            messages = message_cutter(4096, message)
-        try:
-            await self.bot.send_message(self.channel_id, messages[0], parse_mode=parse_mode)
-            await self.send_multipart_message(messages[1:], parse_mode=parse_mode)
-        except BadRequest:
-            await self.bot.send_message(self.channel_id, messages[0], parse_mode="Markdown")
-            await self.send_multipart_message(messages[1:], parse_mode="Markdown")
-
-    async def send_multipart_message(self, messages, parse_mode="HTML", disable_web_page_preview=False):
-        for _message in messages:
-            await self.bot.send_message(
-                self.channel_id, _message, disable_web_page_preview=disable_web_page_preview, parse_mode=parse_mode
-            )
+    # async def send_photo(self, message, photo):
+    #     messages = [message]
+    #     if len(message) > 1024:
+    #         messages = message_cutter(1024, message)
+    #     await self.bot.send_photo(self.channel_id, photo=photo, caption=messages[0], parse_mode="HTML")
+    #     await self.send_multipart_message(messages[1:], disable_web_page_preview=True)
+    #
+    # async def send_message(self, message, parse_mode="HTML"):
+    #     messages = [message]
+    #     if len(message) > 4096:
+    #         messages = message_cutter(4096, message)
+    #     try:
+    #         await self.bot.send_message(self.channel_id, messages[0], parse_mode=parse_mode)
+    #         await self.send_multipart_message(messages[1:], parse_mode=parse_mode)
+    #     except BadRequest:
+    #         await self.bot.send_message(self.channel_id, messages[0], parse_mode="Markdown")
+    #         await self.send_multipart_message(messages[1:], parse_mode="Markdown")
+    #
+    # async def send_multipart_message(self, messages, parse_mode="HTML", disable_web_page_preview=False):
+    #     for _message in messages:
+    #         await self.bot.send_message(
+    #             self.channel_id, _message, disable_web_page_preview=disable_web_page_preview, parse_mode=parse_mode
+    #         )
 
     async def disconnect(self):
         await self.bot.session.close()
