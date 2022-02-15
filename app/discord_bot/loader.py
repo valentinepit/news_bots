@@ -5,10 +5,11 @@ from datetime import datetime, timedelta
 
 from typing import Dict
 
-from app.discord import message_editor
-from app.tg_bot.aio_bot import DiscordBot
+from discord_bot import message_editor
+from aio_bot import DiscordBot
 from discord.errors import Forbidden
 from discord.ext import commands
+
 
 TOKEN_AUTH = os.environ["DISCORD_TOKEN"]
 TG_TOKEN = os.environ["TG_ANALYTICS_TOKEN"]
@@ -18,7 +19,7 @@ logger = logging.getLogger(__name__)
 
 last_check = None
 
-channels_list_path = "app/discord/discord_channels.json"
+channels_list_path = "app/discord_bot/discord_channels.json"
 channels = {}
 
 
@@ -26,26 +27,26 @@ async def update_news():
     client = commands.Bot(command_prefix="!", reconnect=True)
     try:
         await client.login(TOKEN_AUTH, bot=False)
-        cnt = await collect_messages_from_channels(client)
+        _news = await collect_messages_from_channels(client)
     finally:
         await client.close()
-    logger.info(f"{cnt} news loaded to tg from Discord")
+    # logger.info(f"{0} news loaded to tg from Discord")
+    logger.info(f"{len(_news)} news loaded from Discord")
+    return _news
 
 
 async def collect_messages_from_channels(client):
     now = datetime.now()
+    messages = []
+    # cnt = 0
     global last_check, channels
     channels = json.loads(open(channels_list_path, "r").read())
     last_check = last_check or now - timedelta(minutes=1)
-
     logger.info(f"last_chek = {last_check}")
-
-    bot = DiscordBot()
-    channel_for_add, channels_for_delete = await bot.get_updates()
-    if await update_channels(channel_for_add, channels_for_delete):
-        await bot.send_channels_list()
-
-    cnt = 0
+    # bot = DiscordBot()
+    # channel_for_add, channels_for_delete = await bot.get_updates()
+    # if await update_channels(channel_for_add, channels_for_delete):
+    #     await bot.send_channels_list()
     for channel_name, channel_id in channels.items():
         try:
             channel = await client.fetch_channel(channel_id)
@@ -55,14 +56,14 @@ async def collect_messages_from_channels(client):
 
         logger.info(f"connected to {channel_name}")
         messages = await channel.history(after=last_check).flatten()
-        for msg in messages:
-            message = message_editor.convert_row_news(msg.content, channel.guild)
-            created_at = msg.created_at.strftime("%m/%d/%Y, %H:%M:%S")
-            await bot.send_message(f"{channel_name}\n{created_at}\n{message}")
-            cnt += 1
+        # for msg in messages:
+        #     message = message_editor.convert_row_news(msg.content, channel.guild)
+        #     created_at = msg.created_at.strftime("%m/%d/%Y, %H:%M:%S")
+        #     # await bot.send_message(f"{channel_name}\n{created_at}\n{message}")
+        #     cnt += 1
     last_check = now
-    await bot.disconnect()
-    return cnt
+    # await bot.disconnect()
+    return messages
 
 
 async def update_channels(add_ch: Dict, del_ch: str):

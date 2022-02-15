@@ -5,7 +5,7 @@ import os
 from aiogram import Bot, Dispatcher
 from aiogram.utils.exceptions import BadRequest
 
-from app.notion.message_editor import message_cutter
+from notion.message_editor import message_cutter
 
 logger = logging.getLogger(__name__)
 
@@ -81,7 +81,7 @@ class DiscordBot(NewsBot):
         return new_channels, channels_for_delete
 
     async def send_channels_list(self):
-        channels_list_path = "app/discord/discord_channels.json"
+        channels_list_path = "app/discord_bot/discord_channels.json"
         channels = json.loads(open(channels_list_path, "r").read())
         msg = "Список активных каналов: \n"
         for _name, _id in channels.items():

@@ -7,8 +7,8 @@ from datetime import datetime
 import pytz
 import requests
 
-import app.notion.message_editor as me
-from app.tg_bot.aio_bot import NotionBot
+import notion.message_editor as me
+from aio_bot import NotionBot
 
 logger = logging.getLogger(__name__)
 
