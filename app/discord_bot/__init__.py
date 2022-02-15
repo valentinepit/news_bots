@@ -1,1 +1,1 @@
-from .loader import update_news, last_check
+from .loader import last_check, update_news  # NOQA

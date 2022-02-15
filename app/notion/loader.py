@@ -1,14 +1,11 @@
-import asyncio
 import json
 import logging
 import os
 from datetime import datetime
 
+import message_editor as me
 import pytz
 import requests
-
-import notion.message_editor as me
-from aio_bot import NotionBot
 
 logger = logging.getLogger(__name__)
 
@@ -27,7 +24,6 @@ HEADERS = {
 }
 
 FILTER = json.dumps({"filter": {"property": "Status", "select": {"equals": "Опубликовать"}}})
-# FILTER = json.dumps({"filter": {"property": "Status", "select": {"equals": "Опубликовано"}}})
 
 
 class News:
@@ -54,8 +50,7 @@ class News:
 
     def public_messages(self, message_list):
         now = datetime.now(pytz.utc)
-        cnt = 0
-        bot = NotionBot()
+        messages = []
         for _message in message_list:
             try:
                 public_time = datetime.fromisoformat(_message["time"])
@@ -64,17 +59,13 @@ class News:
                 continue
             if public_time < now:
                 tg_message = me.create_message(_message)
-                if tg_message["photo"]:
-                    asyncio.run(bot.send_photo(tg_message["text"], tg_message["photo"]))
-                else:
-                    asyncio.run(bot.send_message(tg_message["text"]))
-                cnt += 1
+                messages.append(tg_message)
                 self.change_news_status(_message["id"])
-        asyncio.run(bot.disconnect())
-        return cnt
+        return messages
 
     def update_news(self):
         notion_db = self.read_database()
         news = self.find_news(notion_db)
-        cnt = self.public_messages(news)
-        logger.info(f"{cnt} news loaded to tg from Notion")
+        messages = self.public_messages(news)
+        logger.info(f"{len(messages)} news loaded to tg from Notion")
+        return messages

@@ -2,13 +2,11 @@ import json
 import logging
 import os
 from datetime import datetime, timedelta
-
 from typing import Dict
 
-from discord_bot import message_editor
 from discord.errors import Forbidden
 from discord.ext import commands
-
+from discord_bot import message_editor
 
 TOKEN_AUTH = os.environ["DISCORD_TOKEN"]
 TG_TOKEN = os.environ["TG_ANALYTICS_TOKEN"]

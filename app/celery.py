@@ -7,11 +7,7 @@ from celery.schedules import crontab
 app = Celery(
     "app",
     broker=os.environ["CELERY_BROKER_URL"],
-    include=[
-        "app.tg_bot.tasks",
-        "app.discord_bot.tasks",
-        "app.notion.tasks"
-    ],
+    include=["app.tg_bot.tasks", "app.discord_bot.tasks", "app.notion.tasks"],
 )
 
 app.conf.worker_prefetch_multiplier = 1

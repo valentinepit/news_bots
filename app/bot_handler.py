@@ -3,14 +3,14 @@ import json
 import logging
 import os
 
+import aioschedule
 from aiogram import Bot, types
 from aiogram.dispatcher import Dispatcher
 from aiogram.utils import executor
-import aioschedule
 from aiogram.utils.exceptions import BadRequest
-
+from discord_bot import update_news as discord
+from notion import News
 from notion.message_editor import message_cutter
-from discord_bot import update_news
 
 TG_TOKEN = os.environ["TG_ANALYTICS_TOKEN"]
 CHANNEL_ID = os.environ["ANALYTICS_CHANNEL_ID"]
@@ -22,19 +22,21 @@ logger = logging.getLogger(__name__)
 discord_channels_path = "app/discord_bot/discord_channels.json"
 
 
-@dp.message_handler(commands=['start'])
+@dp.message_handler(commands=["start"])
 async def process_start_command(message: types.Message):
     await message.reply("Введите /help для получения списка команд")
 
 
-@dp.message_handler(commands=['help'])
+@dp.message_handler(commands=["help"])
 async def process_help_command(message: types.Message):
-    await message.reply("/channels - Вывдодит список текущих каналов \n"
-                        "/add_channel - Добавить канал (Name:id) \n"
-                        "/delete_channel - Убрать канал (Name)")
+    await message.reply(
+        "/channels - Вывдодит список текущих каналов \n"
+        "/add_channel - Добавить канал (Name:id) \n"
+        "/delete_channel - Убрать канал (Name)"
+    )
 
 
-@dp.message_handler(commands=['channels'])
+@dp.message_handler(commands=["channels"])
 async def process_channels_command(message: types.Message):
     channels = json.loads(open(discord_channels_path, "r").read())
     msg = "Список активных каналов: \n"
@@ -43,14 +45,14 @@ async def process_channels_command(message: types.Message):
     await message.reply(msg)
 
 
-@dp.message_handler(commands=['add_channel'])
+@dp.message_handler(commands=["add_channel"])
 async def process_add_channel_command(message: types.Message):
     with open(discord_channels_path, "r") as f:
         data = json.load(f)
     try:
         channel_ids = message.get_args().split(":")
         data[channel_ids[0]] = int(channel_ids[1].strip())
-        with open(discord_channels_path, 'w', encoding="utf-8") as f:
+        with open(discord_channels_path, "w", encoding="utf-8") as f:
             json.dump(data, f, ensure_ascii=False)
         msg = f"Добавлен новый канал {channel_ids[0]}"
     except (IndexError, ValueError):
@@ -58,14 +60,14 @@ async def process_add_channel_command(message: types.Message):
     await message.reply(msg)
 
 
-@dp.message_handler(commands=['delete_channel'])
+@dp.message_handler(commands=["delete_channel"])
 async def process_delete_channel_command(message: types.Message):
     with open(discord_channels_path, "r") as f:
         data = json.load(f)
         channel_name = message.get_args()
     try:
         name = data.pop(channel_name)
-        with open(discord_channels_path, 'w', encoding="utf-8") as f:
+        with open(discord_channels_path, "w", encoding="utf-8") as f:
             json.dump(data, f, ensure_ascii=False)
         msg = f"Удален канал id - {name}"
     except KeyError:
@@ -101,7 +103,8 @@ async def send_multipart_message(messages, channel_id, parse_mode="HTML", disabl
 
 
 async def scheduler():
-    aioschedule.every(60).seconds.do(update_discord_news)
+    aioschedule.every(5).minutes.do(update_discord_news)
+    aioschedule.every(60).seconds.do(update_notion_news)
     while True:
         await aioschedule.run_pending()
         await asyncio.sleep(1)
@@ -111,14 +114,20 @@ async def on_startup(dp):
     asyncio.create_task(scheduler())
 
 
+async def update_notion_news():
+    notion_news = News()
+    msgs = notion_news.update_news()
+    for msg in msgs:
+        if msg["photo"]:
+            await send_photo(msg["text"], msg["photo"], CHANNEL_ID)
+        else:
+            await send_message(msg["text"], CHANNEL_ID)
+
+
 async def update_discord_news():
-    msgs = await get_discord_news()
+    msgs = await discord()
     for msg in msgs:
         await send_message(msg, CHANNEL_ID)
-
-
-async def get_discord_news():
-    return await update_news()
 
 
 def start_bot():
