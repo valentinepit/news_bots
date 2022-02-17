@@ -48,7 +48,7 @@ def add_tags_to_text(data):
 def message_cutter(max_length: int, message: str) -> List:
     messages = []
     while len(message) >= max_length:
-        last_point_index = message[:max_length].rindex(". ") + 1
+        last_point_index = message[:max_length].rindex("\n") + 1
         messages.append(message[:last_point_index])
         message = message[last_point_index:]
     messages.append(message)
