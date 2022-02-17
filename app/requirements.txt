@@ -17,3 +17,5 @@ discord~=1.7.3
 typing~=3.6.4
 aioschedule~=0.5.2
 beautifulsoup4~=4.9.3
+
+selenium==4.1.0

@@ -9,6 +9,7 @@ from aiogram.dispatcher import Dispatcher
 from aiogram.utils import executor
 from aiogram.utils.exceptions import BadRequest
 from discord_bot import update_news as discord
+from gov_prop.loader import get_news as gov_prop
 from notion import News
 from notion.message_editor import message_cutter
 
@@ -105,6 +106,7 @@ async def send_multipart_message(messages, channel_id, parse_mode="HTML", disabl
 async def scheduler():
     aioschedule.every(5).minutes.do(update_discord_news)
     aioschedule.every(10).minutes.do(update_notion_news)
+    aioschedule.every(1).minutes.do(update_gov_prop_news)
     while True:
         await aioschedule.run_pending()
         await asyncio.sleep(1)
@@ -128,6 +130,13 @@ async def update_discord_news():
     msgs = await discord()
     for msg in msgs:
         await send_message(msg, CHANNEL_ID)
+
+
+async def update_gov_prop_news():
+    _news = gov_prop()
+    for name, msgs in _news.items():
+        for msg in msgs:
+            await send_message(f"<b>{name}</b>\n{msg}", CHANNEL_ID)
 
 
 def start_bot():
