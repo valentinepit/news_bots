@@ -3,9 +3,10 @@ import logging
 import os
 from datetime import datetime
 
-import notion.message_editor as me
 import pytz
 import requests
+
+import notion.message_editor as me
 
 logger = logging.getLogger(__name__)
 
