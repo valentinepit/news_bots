@@ -16,8 +16,11 @@ services:
     build: ./app
     env_file:
       - .env
+    links:
+      - chromedriver
 
-  selenium:
+  chromedriver:
     image: selenium/standalone-chrome
+    hostname: chromedriver
     ports:
-    - 4444:4444
+      - "4444:4444"

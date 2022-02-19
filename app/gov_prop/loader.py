@@ -3,12 +3,12 @@ import logging
 
 import requests
 
-from app.gov_prop.governance.loader import get_new_gov_topics
-from app.gov_prop.proposal.loader import ProposalNews
+from .governance.loader import get_new_gov_topics
+from .proposal.loader import ProposalNews
 
 logger = logging.getLogger(__name__)
 
-source_list_path = "app/gov_prop/sources.json"
+source_list_path = "gov_prop/sources.json"
 sources = json.loads(open(source_list_path, "r").read())
 
 headers = {
