@@ -41,7 +41,7 @@ def get_new_topics():
                     "content": content,
                     "amount_of_loss": amount_of_loss,
                     "attack_method": attack_method,
-                    "chain": "Unknown"
+                    "chain": "Unknown",
                 }
     logger.info(f"{len(news)} added from {_response.url}")
     return news

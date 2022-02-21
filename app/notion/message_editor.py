@@ -1,6 +1,6 @@
 import json
 from datetime import datetime
-from typing import List, Dict
+from typing import Dict, List
 
 
 def create_message(message):
@@ -60,8 +60,10 @@ def create_page_content(source, _data) -> Dict:
     payload = json.loads(open("../schema.json", "r").read())
     payload["properties"]["Source"]["url"] = source
     payload["properties"]["Date"]["date"]["start"] = _data["date"].replace(".", "-")
-    payload["properties"]['Name']['title'][0]['text']['content'] = _data["header"]
-    payload["properties"]["Notes"]["rich_text"][0]['text']['content'] = f"{_data['content']}\n" \
-                                                                        f"Amount of loss: {_data['amount_of_loss']}\n" \
-                                                                        f"Attack method: {_data['attack_method']}"
+    payload["properties"]["Name"]["title"][0]["text"]["content"] = _data["header"]
+    payload["properties"]["Notes"]["rich_text"][0]["text"]["content"] = (
+        f"{_data['content']}\n"
+        f"Amount of loss: {_data['amount_of_loss']}\n"
+        f"Attack method: {_data['attack_method']}"
+    )
     return payload

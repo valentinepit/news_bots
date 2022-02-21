@@ -2,12 +2,10 @@ import json
 import logging
 import os
 from datetime import datetime
-from app.contrib.notion import api as notion_api
-
-import pytz
-import requests
 
 import app.notion.message_editor as me
+import pytz
+from app.contrib.notion import api as notion_api
 
 logger = logging.getLogger(__name__)
 
@@ -58,4 +56,3 @@ class News:
         messages = self.public_messages(news)
         logger.info(f"{len(messages)} news loaded to tg from Notion")
         return messages
-

@@ -3,18 +3,14 @@ import logging
 import os
 
 import requests
-
 from app.notion.message_editor import create_page_content
-
-schema_path = ""
 
 logger = logging.getLogger(__name__)
 
 BASE_URL = "https://api.notion.com/v1/"
 NOTION_TOKEN = os.environ["NOTION_TOKEN"]
 DB_ID = os.environ["BASE_ID"]
-# FILTER = json.dumps({"filter": {"property": "Status", "select": {"equals": "Опубликовать"}}})
-FILTER = json.dumps({"filter": {"property": "Status", "select": {"equals": "Опубликовано"}}})
+FILTER = json.dumps({"filter": {"property": "Status", "select": {"equals": "Опубликовать"}}})
 
 HEADERS = {
     "Authorization": "Bearer " + NOTION_TOKEN,
@@ -43,5 +39,3 @@ def create_page(_source, _data):
     payload = create_page_content(_source, _data)
     response = requests.request("POST", url, json=payload, headers=HEADERS)
     print(response.text)
-
-

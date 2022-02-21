@@ -1,11 +1,11 @@
 import logging
 from datetime import datetime, timedelta
 
-from selenium.common.exceptions import WebDriverException
 from selenium import webdriver
+from selenium.common.exceptions import WebDriverException
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
 
 logger = logging.getLogger(__name__)
 
@@ -68,10 +68,9 @@ def get_new_topics():
                     "content": content,
                     "amount_of_loss": amount_of_loss,
                     "attack_method": attack_method,
-                    "chain": chain
-                     }
+                    "chain": chain,
+                }
     finally:
         driver.quit()
     logger.info(f"{len(news)} added from {url}")
     return news
-
