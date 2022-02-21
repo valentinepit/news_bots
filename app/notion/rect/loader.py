@@ -1,9 +1,10 @@
 import logging
 from typing import Dict
 
-from app.contrib.notion import api as notion_api
 from defiyield import get_new_topics as defiyeld
 from hacked import get_new_topics as hacked
+
+from app.contrib.notion import api as notion_api
 
 logger = logging.getLogger(__name__)
 

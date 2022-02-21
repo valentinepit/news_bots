@@ -6,6 +6,7 @@ from typing import Dict
 
 from discord.errors import Forbidden
 from discord.ext import commands
+
 from discord_bot import message_editor
 
 TOKEN_AUTH = os.environ["DISCORD_TOKEN"]

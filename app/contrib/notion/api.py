@@ -3,6 +3,7 @@ import logging
 import os
 
 import requests
+
 from app.notion.message_editor import create_page_content
 
 logger = logging.getLogger(__name__)
