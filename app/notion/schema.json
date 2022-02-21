@@ -1,0 +1,100 @@
+{
+  "parent": {
+    "database_id": "cfd16c05655e471aab66a86a34048218",
+    "type": "database_id"
+  },
+  "properties": {
+    "#": {
+      "id": "%40%7BGo",
+      "rich_text": [],
+      "type": "rich_text"
+    },
+    "Created by": {
+      "id": "a%7BLL",
+      "select": {
+        "name": "Exploits"
+      },
+      "type": "select"
+    },
+    "Date": {
+      "date": {
+        "start": "2022-12-22"
+      },
+      "id": "n%3Acj",
+      "type": "date"
+    },
+    "Date to publish": {
+      "date": {
+        "start": "2022-12-22"
+      },
+      "id": "so%3DA",
+      "type": "date"
+    },
+    "Last Modified": {
+      "date": {
+        "start": "2022-12-22"
+      },
+      "id": "Bdy%7C",
+      "type": "date"
+    },
+    "Name": {
+      "id": "title",
+      "title": [
+        {
+          "type": "text",
+          "text": {
+            "content": ""
+          }
+        }
+      ],
+      "type": "title"
+    },
+    "Notes": {
+      "id": "T%3Ed%3E",
+      "rich_text": [{
+        "type": "text",
+        "text": {
+          "content": ""
+        }
+      }
+      ],
+      "type": "rich_text"
+    },
+    "Picture": {
+      "files": [],
+      "id": "cZOS",
+      "type": "files"
+    },
+    "Rating": {
+      "id": "%3FYl%3D",
+      "select": {
+        "name": "***"
+      },
+      "type": "select"
+    },
+    "Select": {
+      "id": "NwtV",
+      "select": {
+        "name": "Exploits"
+      },
+      "type": "select"
+    },
+    "Source": {
+      "id": "XTxj",
+      "type": "url",
+      "url": "None"
+    },
+    "Status": {
+      "id": "fEPj",
+      "select": {
+        "name": "Загружено"
+      },
+      "type": "select"
+    },
+    "Under review": {
+      "checkbox": false,
+      "id": "%7B%3Eqd",
+      "type": "checkbox"
+    }
+  }
+}

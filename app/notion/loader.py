@@ -7,7 +7,7 @@ from app.contrib.notion import api as notion_api
 import pytz
 import requests
 
-import notion.message_editor as me
+import app.notion.message_editor as me
 
 logger = logging.getLogger(__name__)
 
@@ -29,13 +29,6 @@ FILTER = json.dumps({"filter": {"property": "Status", "select": {"equals": "Оп
 
 
 class News:
-    def read_database(self):
-        url = f"{BASE_URL}databases/{DB_ID}/query"
-        res = requests.request("POST", url, headers=HEADERS, data=FILTER)
-        logger.info("We have logged in to Notion")
-        data = res.json()
-        return data
-
     def find_news(self, _data):
         public_list = []
         for item in _data["results"]:
@@ -43,12 +36,6 @@ class News:
             _news["id"] = item["id"]
             public_list.append(_news)
         return public_list
-
-    def change_news_status(self, page_id):
-        update_url = f"{BASE_URL}pages/{page_id}"
-        update_data = {"properties": {"Status": {"select": {"name": "Опубликовано"}}}}
-        data = json.dumps(update_data)
-        requests.request("PATCH", update_url, headers=HEADERS, data=data)
 
     def public_messages(self, message_list):
         now = datetime.now(pytz.utc)
@@ -71,3 +58,4 @@ class News:
         messages = self.public_messages(news)
         logger.info(f"{len(messages)} news loaded to tg from Notion")
         return messages
+
