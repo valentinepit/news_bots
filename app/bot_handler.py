@@ -8,7 +8,6 @@ from aiogram import Bot, types
 from aiogram.dispatcher import Dispatcher
 from aiogram.utils import executor
 from aiogram.utils.exceptions import BadRequest
-
 from discord_bot import update_news as discord
 from gov_prop.loader import get_news as gov_prop
 from gov_prop.loader import source_list_path

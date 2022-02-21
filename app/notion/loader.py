@@ -2,6 +2,7 @@ import json
 import logging
 import os
 from datetime import datetime
+from app.contrib.notion import api as notion_api
 
 import pytz
 import requests
@@ -61,11 +62,11 @@ class News:
             if public_time < now:
                 tg_message = me.create_message(_message)
                 messages.append(tg_message)
-                self.change_news_status(_message["id"])
+                notion_api.change_news_status(_message["id"])
         return messages
 
     def update_news(self):
-        notion_db = self.read_database()
+        notion_db = notion_api.read_database()
         news = self.find_news(notion_db)
         messages = self.public_messages(news)
         logger.info(f"{len(messages)} news loaded to tg from Notion")
