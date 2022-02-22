@@ -4,13 +4,14 @@ import os
 
 import requests
 
-from notion.message_editor import create_page_content
+from app.notion.message_editor import create_page_content
 
 logger = logging.getLogger(__name__)
 
 BASE_URL = "https://api.notion.com/v1/"
 NOTION_TOKEN = os.environ["NOTION_TOKEN"]
 DB_ID = os.environ["BASE_ID"]
+EXPLOITS_ID = os.environ["EXPLOITS_ID"]
 FILTER = json.dumps({"filter": {"property": "Status", "select": {"equals": "Опубликовать"}}})
 
 HEADERS = {

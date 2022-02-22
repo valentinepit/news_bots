@@ -22,7 +22,7 @@ def get_new_topics():
     if _response.status_code == 200:
         root = html.fromstring(_response.text)
         topics = root.xpath("//div[@class='case-content']/ul/li")
-        for en, topic in enumerate(topics):
+        for topic in topics:
             header = topic.xpath(".//h3/text()")[0]
             date = topic.xpath(".//span[@class='time']")[0].text
             content = topic.xpath(".//p/text()")[0]
@@ -34,7 +34,7 @@ def get_new_topics():
             except ValueError:
                 created_at = datetime.strptime(date, "%d %B %Y").date()
             if now - created_at < timedelta(days=days_ago):
-                name = f"{url}_{en}"
+                name = f"{created_at.strftime('%Y-%m-%d')} - {header}"
                 news[name] = {
                     "date": created_at.strftime("%Y-%m-%d"),
                     "header": header,
@@ -42,6 +42,7 @@ def get_new_topics():
                     "amount_of_loss": amount_of_loss,
                     "attack_method": attack_method,
                     "chain": "Unknown",
+                    "source": url
                 }
     logger.info(f"{len(news)} added from {_response.url}")
     return news

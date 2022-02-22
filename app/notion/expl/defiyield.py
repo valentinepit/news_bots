@@ -29,7 +29,7 @@ def get_new_topics():
             button.click()
         topics = driver.find_elements(By.XPATH, "//div[@class='scam-database-row ']")
 
-        for en, topic in enumerate(topics):
+        for topic in topics:
             news_headers = topic.text.split("\n")
             header, chain, attack_method, amount_of_loss, date = (
                 news_headers[0],
@@ -45,7 +45,7 @@ def get_new_topics():
                 attack_method, amount_of_loss, date = news_headers[3], news_headers[4], news_headers[5]
                 created_at = datetime.strptime(date, "%d.%m.%Y").date()
             if now - created_at < timedelta(days=days_ago):
-                name = f"{url}_{en}"
+                name = f"{created_at.strftime('%Y-%m-%d')} - {header}"
                 news[name] = {
                     "date": created_at.strftime("%Y-%m-%d"),
                     "header": header,
@@ -53,6 +53,7 @@ def get_new_topics():
                     "amount_of_loss": amount_of_loss,
                     "attack_method": attack_method,
                     "chain": chain,
+                    "source": url
                 }
     finally:
         driver.quit()

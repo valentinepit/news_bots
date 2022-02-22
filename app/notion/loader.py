@@ -1,30 +1,13 @@
-import json
 import logging
 import os
 from datetime import datetime
 
 import pytz
 
-import notion.message_editor as me
-from contrib.notion import api as notion_api
+import app.notion.message_editor as me
+from app.contrib.notion import api as notion_api
 
 logger = logging.getLogger(__name__)
-
-NOTION_TOKEN = os.environ["NOTION_TOKEN"]
-DB_ID = os.environ["BASE_ID"]
-
-TG_TOKEN = os.environ["TG_TOKEN"]
-CHANNEL_ID = os.environ["CHANNEL_ID"]
-
-BASE_URL = "https://api.notion.com/v1/"
-
-HEADERS = {
-    "Authorization": "Bearer " + NOTION_TOKEN,
-    "Notion-Version": "2021-08-16",
-    "Content-Type": "application/json",
-}
-
-FILTER = json.dumps({"filter": {"property": "Status", "select": {"equals": "Опубликовать"}}})
 
 
 class News:
@@ -57,3 +40,4 @@ class News:
         messages = self.public_messages(news)
         logger.info(f"{len(messages)} news loaded to tg from Notion")
         return messages
+

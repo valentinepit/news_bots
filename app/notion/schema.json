@@ -1,100 +1,157 @@
 {
   "parent": {
-    "database_id": "cfd16c05655e471aab66a86a34048218",
+    "database_id": "1dff0122-648d-4ec1-8133-a1bbc15be575",
     "type": "database_id"
   },
   "properties": {
-    "#": {
-      "id": "%40%7BGo",
+    "About (defiyield.app)": {
+      "id": "ouMF",
+      "rich_text": [
+        {
+          "annotations": {
+            "bold": false,
+            "code": false,
+            "color": "default",
+            "italic": false,
+            "strikethrough": false,
+            "underline": false
+          },
+          "href": "",
+          "plain_text": "",
+          "text": {
+            "content": "",
+            "link": ""
+          },
+          "type": "text"
+        }
+      ],
+      "type": "rich_text"
+    },
+    "About (slowmist)": {
+      "id": "E%5CAO",
       "rich_text": [],
       "type": "rich_text"
     },
-    "Created by": {
-      "id": "a%7BLL",
-      "select": {
-        "name": "Exploits"
+    "Amount of Major": {
+      "formula": {
+        "number": 0,
+        "type": "number"
       },
+      "id": "FiKd",
+      "type": "formula"
+    },
+    "Amount of Minor": {
+      "formula": {
+        "number": 0,
+        "type": "number"
+      },
+      "id": "htA%3E",
+      "type": "formula"
+    },
+    "Attachments": {
+      "files": [],
+      "id": "CtJ%3D",
+      "type": "files"
+    },
+    "Attack type": {
+      "id": "KjxU",
+      "select": "",
       "type": "select"
     },
-    "Date": {
-      "date": {
-        "start": "2022-12-22"
+    "Audit (files)": {
+      "id": "cbQS",
+      "rollup": {
+        "array": [],
+        "function": "show_original",
+        "type": "array"
       },
-      "id": "n%3Acj",
+      "type": "rollup"
+    },
+    "Blockchain": {
+      "id": "YI%7Bq",
+      "relation": [],
+      "type": "relation"
+    },
+    "Date of exploit": {
+      "date": {
+        "end": "",
+        "start": "",
+        "time_zone": ""
+      },
+      "id": "EXfq",
       "type": "date"
     },
-    "Date to publish": {
-      "date": {
-        "start": "2022-12-22"
-      },
-      "id": "so%3DA",
-      "type": "date"
+    "Exploits. Type": {
+      "id": "p%5Ebo",
+      "relation": [],
+      "type": "relation"
     },
-    "Last Modified": {
-      "date": {
-        "start": "2022-12-22"
-      },
-      "id": "Bdy%7C",
-      "type": "date"
+    "Losses": {
+      "id": "rQq%40",
+      "number":0,
+      "type": "number"
     },
-    "Name": {
+    "Other": {
+      "id": "mqqs",
+      "rich_text": [],
+      "type": "rich_text"
+    },
+    "Projects": {
+      "id": "pljE",
+      "relation": [],
+      "type": "relation"
+    },
+    "Source": {
+      "id": "i%7D_x",
+      "rich_text": [
+        {
+          "annotations": {
+            "bold": false,
+            "code": false,
+            "color": "default",
+            "italic": false,
+            "strikethrough": false,
+            "underline": false
+          },
+          "href": "",
+          "plain_text": "",
+          "text": {
+            "content": "",
+            "link": ""
+          },
+          "type": "text"
+        }
+      ],
+      "type": "rich_text"
+    },
+    "Title": {
       "id": "title",
       "title": [
         {
-          "type": "text",
+          "annotations": {
+            "bold": false,
+            "code": false,
+            "color": "default",
+            "italic": false,
+            "strikethrough": false,
+            "underline": false
+          },
+          "href": "",
+          "plain_text": "",
           "text": {
-            "content": ""
-          }
+            "content": "",
+            "link": ""
+          },
+          "type": "text"
         }
       ],
       "type": "title"
     },
-    "Notes": {
-      "id": "T%3Ed%3E",
-      "rich_text": [{
-        "type": "text",
-        "text": {
-          "content": ""
-        }
-      }
-      ],
-      "type": "rich_text"
-    },
-    "Picture": {
-      "files": [],
-      "id": "cZOS",
-      "type": "files"
-    },
-    "Rating": {
-      "id": "%3FYl%3D",
-      "select": {
-        "name": "***"
-      },
+    "Type": {
+      "id": "yJbO",
+      "select": "",
       "type": "select"
-    },
-    "Select": {
-      "id": "NwtV",
-      "select": {
-        "name": "Exploits"
-      },
-      "type": "select"
-    },
-    "Source": {
-      "id": "XTxj",
-      "type": "url",
-      "url": "None"
-    },
-    "Status": {
-      "id": "fEPj",
-      "select": {
-        "name": "Загружено"
-      },
-      "type": "select"
-    },
-    "Under review": {
-      "checkbox": false,
-      "id": "%7B%3Eqd",
-      "type": "checkbox"
     }
-  }
+  },
+  "url": ""
 }

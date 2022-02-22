@@ -58,10 +58,11 @@ def message_cutter(max_length: int, message: str) -> List:
 
 def create_page_content(source, _data) -> Dict:
     payload = json.loads(open("notion/schema.json", "r").read())
-    payload["properties"]["Source"]["url"] = source
-    payload["properties"]["Date"]["date"]["start"] = _data["date"].replace(".", "-")
-    payload["properties"]["Name"]["title"][0]["text"]["content"] = _data["header"]
-    payload["properties"]["Notes"]["rich_text"][0]["text"]["content"] = (
+    fields = payload["properties"]
+    fields["Source"]["url"] = source
+    fields["Date"]["date"]["start"] = _data["date"].replace(".", "-")
+    fields["Name"]["title"][0]["text"]["content"] = _data["header"]
+    fields["Notes"]["rich_text"][0]["text"]["content"] = (
         f"{_data['content']}\n"
         f"Amount of loss: {_data['amount_of_loss']}\n"
         f"Attack method: {_data['attack_method']}"
