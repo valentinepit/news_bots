@@ -13,6 +13,7 @@ from discord_bot import update_news as discord
 from gov_prop.loader import get_news as gov_prop
 from gov_prop.loader import source_list_path
 from notion import News
+from notion.expl.loader import update_exploits as exploits
 from notion.message_editor import message_cutter
 
 TG_TOKEN = os.environ["TG_ANALYTICS_TOKEN"]
@@ -150,6 +151,7 @@ async def send_multipart_message(messages, channel_id, parse_mode="HTML", disabl
 async def scheduler():
     aioschedule.every(5).minutes.do(update_discord_news)
     aioschedule.every(10).minutes.do(update_notion_news)
+    aioschedule.every(1).days.do(update_exploits)
     aioschedule.every(1).days.do(update_gov_prop_news)
     while True:
         await aioschedule.run_pending()
@@ -158,6 +160,10 @@ async def scheduler():
 
 async def on_startup(dp):
     asyncio.create_task(scheduler())
+
+
+async def update_exploits():
+    exploits()
 
 
 async def update_notion_news():

@@ -57,7 +57,7 @@ def message_cutter(max_length: int, message: str) -> List:
 
 
 def create_page_content(source, _data) -> Dict:
-    payload = json.loads(open("../schema.json", "r").read())
+    payload = json.loads(open("notion/schema.json", "r").read())
     payload["properties"]["Source"]["url"] = source
     payload["properties"]["Date"]["date"]["start"] = _data["date"].replace(".", "-")
     payload["properties"]["Name"]["title"][0]["text"]["content"] = _data["header"]

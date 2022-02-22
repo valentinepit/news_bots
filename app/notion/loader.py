@@ -5,8 +5,8 @@ from datetime import datetime
 
 import pytz
 
-import app.notion.message_editor as me
-from app.contrib.notion import api as notion_api
+import notion.message_editor as me
+from contrib.notion import api as notion_api
 
 logger = logging.getLogger(__name__)
 

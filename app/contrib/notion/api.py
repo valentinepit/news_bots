@@ -4,7 +4,7 @@ import os
 
 import requests
 
-from app.notion.message_editor import create_page_content
+from notion.message_editor import create_page_content
 
 logger = logging.getLogger(__name__)
 
@@ -38,5 +38,4 @@ def change_news_status(page_id):
 def create_page(_source, _data):
     url = f"{BASE_URL}pages/"
     payload = create_page_content(_source, _data)
-    response = requests.request("POST", url, json=payload, headers=HEADERS)
-    print(response.text)
+    requests.request("POST", url, json=payload, headers=HEADERS)
