@@ -56,15 +56,20 @@ def message_cutter(max_length: int, message: str) -> List:
     return messages
 
 
-def create_page_content(source, _data) -> Dict:
-    payload = json.loads(open("notion/schema.json", "r").read())
+def create_page_content(title, _data) -> Dict:
+    payload = json.loads(open("../schema.json", "r").read())
     fields = payload["properties"]
-    fields["Source"]["url"] = source
-    fields["Date"]["date"]["start"] = _data["date"].replace(".", "-")
-    fields["Name"]["title"][0]["text"]["content"] = _data["header"]
-    fields["Notes"]["rich_text"][0]["text"]["content"] = (
-        f"{_data['content']}\n"
-        f"Amount of loss: {_data['amount_of_loss']}\n"
-        f"Attack method: {_data['attack_method']}"
-    )
+    fields["Title"]["title"][0]["text"]["content"] = title
+    fields["Date of exploit"]["date"]["start"] = _data["date"]
+    fields["Attack type"]["select"]["name"] = _data["attack_method"]
+    losses = int(_data["amount_of_loss"][1::].replace(",", "")) if _data["amount_of_loss"].startswith("$") else 0
+    fields["Losses"]["number"] = losses
+    fields["About defiyield"]["rich_text"][0]["text"]["content"] = _data["About (defiyield.app)"] if _data[
+        "About (defiyield.app)"] else " "
+    fields["About slowmist"]["rich_text"][0]["text"]["content"] = _data["About (slowmist)"] if _data[
+        "About (slowmist)"] else " "
+    fields["Source"]["rich_text"][0]["text"]["content"] = _data["source"]
+
+    fields["Projects"]["relation"] = _data["projects"]
+    fields["Blockchain"]["relation"] = _data["blockchain"]
     return payload

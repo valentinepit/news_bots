@@ -12,7 +12,7 @@ headers = {
 }
 
 url = "https://hacked.slowmist.io/en/"
-days_ago = 1
+days_ago = 20
 
 
 def get_new_topics():
@@ -36,13 +36,14 @@ def get_new_topics():
             if now - created_at < timedelta(days=days_ago):
                 name = f"{created_at.strftime('%Y-%m-%d')} - {header}"
                 news[name] = {
-                    "date": created_at.strftime("%Y-%m-%d"),
+                    "date": created_at.strftime('%Y-%m-%d'),
                     "header": header,
-                    "content": content,
+                    "About (slowmist)": content,
                     "amount_of_loss": amount_of_loss,
                     "attack_method": attack_method,
                     "chain": "Unknown",
-                    "source": url
+                    "source": url,
+                    "About (defiyield.app)": "",
                 }
     logger.info(f"{len(news)} added from {_response.url}")
     return news

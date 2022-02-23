@@ -5,12 +5,12 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
-from utils.selen_driver import get_webdriver
+from app.utils.selen_driver import get_webdriver
 
 logger = logging.getLogger(__name__)
 
 url = "https://defiyield.app/rekt-database"
-days_ago = 1
+days_ago = 20
 
 
 def get_new_topics():
@@ -20,7 +20,7 @@ def get_new_topics():
     driver.implicitly_wait(30)
     driver.get(url)
     try:
-        date_column = WebDriverWait(driver, 20).until(
+        date_column = WebDriverWait(driver, 120).until(
             EC.visibility_of_element_located((By.XPATH, "//div[@class='column date clickable']"))
         )
         date_column.click()
@@ -47,13 +47,14 @@ def get_new_topics():
             if now - created_at < timedelta(days=days_ago):
                 name = f"{created_at.strftime('%Y-%m-%d')} - {header}"
                 news[name] = {
-                    "date": created_at.strftime("%Y-%m-%d"),
+                    "date": created_at.strftime('%Y-%m-%d'),
                     "header": header,
-                    "content": content,
+                    "About (defiyield.app)": content,
                     "amount_of_loss": amount_of_loss,
                     "attack_method": attack_method,
                     "chain": chain,
-                    "source": url
+                    "source": url,
+                    "About (slowmist)": ""
                 }
     finally:
         driver.quit()

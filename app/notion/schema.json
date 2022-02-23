@@ -4,7 +4,7 @@
     "type": "database_id"
   },
   "properties": {
-    "About (defiyield.app)": {
+    "About defiyield": {
       "id": "ouMF",
       "rich_text": [
         {
@@ -19,34 +19,34 @@
           "href": "",
           "plain_text": "",
           "text": {
-            "content": "",
-            "link": ""
+            "content": ""
           },
           "type": "text"
         }
       ],
       "type": "rich_text"
     },
-    "About (slowmist)": {
+    "About slowmist": {
       "id": "E%5CAO",
-      "rich_text": [],
+      "rich_text": [
+        {
+          "annotations": {
+            "bold": false,
+            "code": false,
+            "color": "default",
+            "italic": false,
+            "strikethrough": false,
+            "underline": false
+          },
+          "href": "",
+          "plain_text": "",
+          "text": {
+            "content": ""
+          },
+          "type": "text"
+        }
+      ],
       "type": "rich_text"
-    },
-    "Amount of Major": {
-      "formula": {
-        "number": 0,
-        "type": "number"
-      },
-      "id": "FiKd",
-      "type": "formula"
-    },
-    "Amount of Minor": {
-      "formula": {
-        "number": 0,
-        "type": "number"
-      },
-      "id": "htA%3E",
-      "type": "formula"
     },
     "Attachments": {
       "files": [],
@@ -55,17 +55,8 @@
     },
     "Attack type": {
       "id": "KjxU",
-      "select": "",
+      "select": {},
       "type": "select"
-    },
-    "Audit (files)": {
-      "id": "cbQS",
-      "rollup": {
-        "array": [],
-        "function": "show_original",
-        "type": "array"
-      },
-      "type": "rollup"
     },
     "Blockchain": {
       "id": "YI%7Bq",
@@ -74,9 +65,7 @@
     },
     "Date of exploit": {
       "date": {
-        "end": "",
-        "start": "",
-        "time_zone": ""
+        "start": ""
       },
       "id": "EXfq",
       "type": "date"
@@ -88,7 +77,9 @@
     },
     "Losses": {
       "id": "rQq%40",
-      "number":0,
+      "number": {
+        "format": "dollar"
+      },
       "type": "number"
     },
     "Other": {
@@ -116,8 +107,7 @@
           "href": "",
           "plain_text": "",
           "text": {
-            "content": "",
-            "link": ""
+            "content": ""
           },
           "type": "text"
         }
@@ -139,18 +129,12 @@
           "href": "",
           "plain_text": "",
           "text": {
-            "content": "",
-            "link": ""
+            "content": ""
           },
           "type": "text"
         }
       ],
       "type": "title"
-    },
-    "Type": {
-      "id": "yJbO",
-      "select": "",
-      "type": "select"
     }
   },
   "url": ""

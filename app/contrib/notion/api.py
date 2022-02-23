@@ -21,9 +21,9 @@ HEADERS = {
 }
 
 
-def read_database():
-    url = f"{BASE_URL}databases/{DB_ID}/query"
-    res = requests.request("POST", url, headers=HEADERS, data=FILTER)
+def read_database(_id=DB_ID, _filter=FILTER):
+    url = f"{BASE_URL}databases/{_id}/query"
+    res = requests.request("POST", url, headers=HEADERS, data=_filter)
     logger.info("We have logged in to Notion")
     data = res.json()
     return data
@@ -39,4 +39,5 @@ def change_news_status(page_id):
 def create_page(_source, _data):
     url = f"{BASE_URL}pages/"
     payload = create_page_content(_source, _data)
-    requests.request("POST", url, json=payload, headers=HEADERS)
+    res = requests.request("POST", url, json=payload, headers=HEADERS)
+    print(res.text)
