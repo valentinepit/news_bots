@@ -11,7 +11,9 @@ logger = logging.getLogger(__name__)
 BASE_URL = "https://api.notion.com/v1/"
 NOTION_TOKEN = os.environ["NOTION_TOKEN"]
 DB_ID = os.environ["BASE_ID"]
+
 EXPLOITS_ID = os.environ["EXPLOITS_ID"]
+
 FILTER = json.dumps({"filter": {"property": "Status", "select": {"equals": "Опубликовать"}}})
 
 HEADERS = {
@@ -40,4 +42,4 @@ def create_page(_source, _data):
     url = f"{BASE_URL}pages/"
     payload = create_page_content(_source, _data)
     res = requests.request("POST", url, json=payload, headers=HEADERS)
-    print(res.text)
+

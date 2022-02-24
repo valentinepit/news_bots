@@ -1,6 +1,7 @@
 import logging
 from datetime import datetime, timedelta
 
+from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
@@ -10,53 +11,88 @@ from app.utils.selen_driver import get_webdriver
 logger = logging.getLogger(__name__)
 
 url = "https://defiyield.app/rekt-database"
-days_ago = 20
+days_ago = 10
+now = datetime.now().date()
 
 
 def get_new_topics():
     news = {}
-    now = datetime.now().date()
     driver = get_webdriver()
-    driver.implicitly_wait(30)
-    driver.get(url)
     try:
+        driver.implicitly_wait(30)
+        driver.get(url)
+        last_message_date = now
+        page_size = WebDriverWait(driver, 120).until(
+            EC.visibility_of_element_located((By.XPATH, ".//div[@class='mono-selector ']"))
+        )
+        page_size.click()
+        topics_quantity = page_size.find_elements(By.XPATH, ".//div[@class='item']")
+        topics_quantity[-1].click()
         date_column = WebDriverWait(driver, 120).until(
             EC.visibility_of_element_located((By.XPATH, "//div[@class='column date clickable']"))
         )
         date_column.click()
-        show_down = driver.find_elements(By.XPATH, ".//div[@class='column actions']")
-        for button in show_down:
-            button.click()
-        topics = driver.find_elements(By.XPATH, "//div[@class='scam-database-row ']")
-
-        for topic in topics:
-            news_headers = topic.text.split("\n")
-            header, chain, attack_method, amount_of_loss, date = (
-                news_headers[0],
-                news_headers[1],
-                news_headers[2],
-                news_headers[3],
-                news_headers[4],
-            )
-            content = topic.find_element(By.XPATH, ".//div[@class='description']").text
-            try:
-                created_at = datetime.strptime(date, "%d.%m.%Y").date()
-            except ValueError:
-                attack_method, amount_of_loss, date = news_headers[3], news_headers[4], news_headers[5]
-                created_at = datetime.strptime(date, "%d.%m.%Y").date()
-            if now - created_at < timedelta(days=days_ago):
-                name = f"{created_at.strftime('%Y-%m-%d')} - {header}"
-                news[name] = {
-                    "date": created_at.strftime('%Y-%m-%d'),
-                    "header": header,
-                    "About (defiyield.app)": content,
-                    "amount_of_loss": amount_of_loss,
-                    "attack_method": attack_method,
-                    "chain": chain,
-                    "source": url,
-                    "About (slowmist)": ""
-                }
+        while now - last_message_date < timedelta(days=days_ago):
+            topics, last_message_date = get_page_topics(driver)
+            news = {**news, **topics}
+            pagination(driver)
     finally:
         driver.quit()
     logger.info(f"{len(news)} added from {url}")
     return news
+
+
+def get_page_topics(driver):
+    _news = {}
+    created_at = now - timedelta(days=days_ago)
+    WebDriverWait(driver, 120).until(
+        EC.visibility_of_element_located((By.XPATH, "//div[@class='column date clickable']"))
+    )
+    show_down = driver.find_elements(By.XPATH, ".//div[@class='column actions']")
+    for button in show_down:
+        try:
+            button.click()
+        except:
+            continue
+    topics = driver.find_elements(By.XPATH, "//div[@class='scam-database-row ']")
+    for topic in topics:
+        new_topic, created_at = topic_parser(topic)
+        if not new_topic:
+            break
+        _news = {**_news, **new_topic}
+    return _news, created_at
+
+
+def topic_parser(_topic):
+    new_topic = {}
+    classes = {
+        "chain": ".//div[@class='column tokens with-extra-info network']",
+        "attack_method": ".//div[@class='column with-extra-info column-rekt-function']",
+        "amount_of_loss": ".//div[@class='column funds-lost']",
+        "About (defiyield.app)": ".//div[@class='description']",
+    }
+    date = _topic.find_element(By.XPATH, ".//div[@class='column date']").text
+    created_at = datetime.strptime(date, "%d.%m.%Y").date()
+    if now - created_at < timedelta(days=days_ago):
+        header = _topic.find_element(By.XPATH, ".//div[@class='column justify-start project-name']").text
+        name = f"{created_at.strftime('%Y-%m-%d')} - {header}"
+        new_topic[name] = {
+            "date": created_at.strftime('%Y-%m-%d'),
+            "header": header,
+            "source": url,
+            "About (slowmist)": ""
+        }
+        for key, value in classes.items():
+            try:
+                elem = _topic.find_element(By.XPATH, value).text
+            except NoSuchElementException:
+                elem = ""
+            new_topic[name][key] = elem
+    else:
+        new_topic = None
+    return new_topic, created_at
+
+
+def pagination(driver):
+    next_button = driver.find_element(By.XPATH, "//div[@class='arrow right ']")
+    next_button.click()

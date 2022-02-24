@@ -25,15 +25,12 @@ def update_exploits():
     hacked_topics = hacked()
     news = compile_topics(defiyeld_topics, hacked_topics)
     send_exploits_to_notion(news)
-    # send_exploits_to_notion({})
 
 
 def send_exploits_to_notion(_data: Dict):
-    # collection_view = nt.get_view(exploits_url)
     for name, content in _data.items():
         content["projects"], content["blockchain"] = get_relations_id(content["header"])
         notion_api.create_page(name, content)
-        # nt.create_new_page(name, content, collection_view)
 
 
 def compile_topics(main_list: Dict, secondary_list: Dict) -> Dict:
@@ -49,12 +46,6 @@ def compile_topics(main_list: Dict, secondary_list: Dict) -> Dict:
             main_list[secondary_name] = _data
         two_sources_flag = False
     return main_list
-
-
-def get_page():
-    url = "https://www.notion.so/warpis/685ecddce4984e2da6b27f907497e51a?v=0c39b188b77b4e638dc9111f40ff5efc"
-    collection = nt.get_view(url)
-    print()
 
 
 def get_relations_id(prj_name):
@@ -76,9 +67,8 @@ def get_relations_id(prj_name):
         project_relations.append({"id": page["id"]})
         if page["properties"]["Chain"]["relation"]:
             chain_relations[0]["id"].append({"id": page["properties"]["Chain"]["relation"]})
-    print(f"{prj_name = }     {project_relations=}       {chain_relations=}")
-
     return project_relations, chain_relations
+
 
 #
 # get_relations_id(p["header"])
