@@ -31,7 +31,7 @@ def update_exploits():
 def send_exploits_to_notion(_data: Dict):
     # collection_view = nt.get_view(exploits_url)
     for name, content in _data.items():
-        content["blockchain"], content["projects"] = get_relations_id(content["header"])
+        content["projects"], content["blockchain"] = get_relations_id(content["header"])
         notion_api.create_page(name, content)
         # nt.create_new_page(name, content, collection_view)
 
@@ -61,11 +61,22 @@ def get_relations_id(prj_name):
     chain_relations = []
     project_relations = []
     project_page_id = "b28af33c967d4f46873fe3ced821d5ac"
-    _filter = json.dumps({"filter": {"property": "Name", "text": {"equals": prj_name.split()[0]}}})
+    _filter = json.dumps(
+        {
+            "filter":
+                {"or": [
+                    {"property": "Name", "text": {"equals": prj_name.split()[0]}},
+                    {"property": "Name", "text": {"contains": prj_name}}
+                ]
+                }
+        }
+    )
     project_pages = notion_api.read_database(project_page_id, _filter)
     for page in project_pages["results"]:
-        project_relations.append(page["id"])
-        chain_relations += page["properties"]["Chain"]["relation"]
+        project_relations.append({"id": page["id"]})
+        if page["properties"]["Chain"]["relation"]:
+            chain_relations[0]["id"].append({"id": page["properties"]["Chain"]["relation"]})
+    print(f"{prj_name = }     {project_relations=}       {chain_relations=}")
 
     return project_relations, chain_relations
 
