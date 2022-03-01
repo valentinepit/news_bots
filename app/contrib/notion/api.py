@@ -4,7 +4,7 @@ import os
 
 import requests
 
-from app.notion.message_editor import create_page_content
+from notion.message_editor import create_exploit_page, create_project_page
 
 logger = logging.getLogger(__name__)
 
@@ -26,7 +26,6 @@ HEADERS = {
 def read_database(_id=DB_ID, _filter=FILTER):
     url = f"{BASE_URL}databases/{_id}/query"
     res = requests.request("POST", url, headers=HEADERS, data=_filter)
-    logger.info("We have logged in to Notion")
     data = res.json()
     return data
 
@@ -40,6 +39,9 @@ def change_news_status(page_id):
 
 def create_page(_source, _data):
     url = f"{BASE_URL}pages/"
-    payload = create_page_content(_source, _data)
+    if _source == "new_project":
+        payload = create_project_page(_data)
+    else:
+        payload = create_exploit_page(_source, _data)
     res = requests.request("POST", url, json=payload, headers=HEADERS)
-
+    return res.json()["id"]

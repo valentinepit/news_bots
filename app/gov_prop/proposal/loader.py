@@ -3,6 +3,8 @@ from time import sleep
 
 from selenium.common.exceptions import StaleElementReferenceException
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.wait import WebDriverWait
 
 from utils.selen_driver import get_webdriver
 
@@ -21,7 +23,9 @@ class ProposalNews:
             new_proposals = []
             status = ""
             while status != "Closed":
-                sleep(2)
+                WebDriverWait(driver, 120).until(
+                    EC.visibility_of_element_located(
+                        (By.XPATH, "//div[@class='lmb-2 flex justify-between items-center']")))
                 containers = page.find_elements(By.XPATH, "//div[@class='leading-6']")
                 for container in containers[1:]:
                     try:
@@ -40,7 +44,7 @@ class ProposalNews:
                         msg = f"{header}\n{text}"
                         if msg not in new_proposals:
                             new_proposals.append(msg)
-                page.execute_script("window.scrollTo(0, window.scrollY + 200)")
+                    page.execute_script("window.scrollTo(0, window.scrollY + 200)")
         finally:
             driver.quit()
         return new_proposals

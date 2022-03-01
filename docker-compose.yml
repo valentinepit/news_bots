@@ -21,6 +21,5 @@ services:
 
   chromedriver:
     image: selenium/standalone-chrome
-    hostname: chromedriver
-    ports:
-      - "4444:4444"
+    hostname: chromedriver:4444
+

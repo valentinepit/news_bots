@@ -1,0 +1,37 @@
+{
+  "parent": {
+    "database_id": "b28af33c967d4f46873fe3ced821d5ac",
+    "type": "database_id"
+  },
+  "properties": {
+
+    "Chain": {
+      "id": "IdOC",
+      "type": "relation",
+      "relation": []
+    },
+    "Name": {
+      "id": "title",
+      "type": "title",
+      "title": [
+        {
+          "type": "text",
+          "text": {
+            "content": ""
+          },
+          "annotations": {
+            "bold": false,
+            "italic": false,
+            "strikethrough": false,
+            "underline": false,
+            "code": false,
+            "color": "default"
+          },
+          "plain_text": "",
+          "href": ""
+        }
+      ]
+    }
+  },
+  "url": ""
+}

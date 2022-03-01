@@ -8,11 +8,11 @@ logger = logging.getLogger(__name__)
 
 headers = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
-    "(KHTML, like Gecko) Chrome/92.0.4515.159 Safari/537.36"
+                  "(KHTML, like Gecko) Chrome/92.0.4515.159 Safari/537.36"
 }
 
 base_url = "https://hacked.slowmist.io/en/"
-days_ago = 10
+days_ago = 1
 
 
 def get_new_topics():
@@ -39,7 +39,7 @@ def get_new_topics():
                 if now - created_at < timedelta(days=days_ago):
                     name = f"{created_at.strftime('%Y-%m-%d')} - {header}"
                     news[name] = {
-                        "date": created_at.strftime('%Y-%m-%d'),
+                        "date": created_at.strftime("%Y-%m-%d"),
                         "header": header,
                         "About (slowmist)": content,
                         "amount_of_loss": amount_of_loss,
@@ -52,4 +52,3 @@ def get_new_topics():
                     logger.info(f"{len(news)} added from {_response.url}")
                     return news
         page += 1
-

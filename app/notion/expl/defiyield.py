@@ -1,39 +1,34 @@
 import logging
 from datetime import datetime, timedelta
 
-from selenium.common.exceptions import NoSuchElementException
+from selenium.common.exceptions import NoSuchElementException, WebDriverException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
-from app.utils.selen_driver import get_webdriver
+from utils.selen_driver import get_webdriver
 
 logger = logging.getLogger(__name__)
 
 url = "https://defiyield.app/rekt-database"
-days_ago = 10
+days_ago = 1
 now = datetime.now().date()
 
 
 def get_new_topics():
     news = {}
+    page_index = 0
     driver = get_webdriver()
     try:
         driver.implicitly_wait(30)
         driver.get(url)
         last_message_date = now
-        page_size = WebDriverWait(driver, 120).until(
-            EC.visibility_of_element_located((By.XPATH, ".//div[@class='mono-selector ']"))
-        )
-        page_size.click()
-        topics_quantity = page_size.find_elements(By.XPATH, ".//div[@class='item']")
-        topics_quantity[-1].click()
         date_column = WebDriverWait(driver, 120).until(
             EC.visibility_of_element_located((By.XPATH, "//div[@class='column date clickable']"))
         )
         date_column.click()
         while now - last_message_date < timedelta(days=days_ago):
-            topics, last_message_date = get_page_topics(driver)
+            topics, last_message_date, page_number = get_page_topics(driver, page_index)
             news = {**news, **topics}
             pagination(driver)
     finally:
@@ -42,17 +37,19 @@ def get_new_topics():
     return news
 
 
-def get_page_topics(driver):
+def get_page_topics(driver, counter):
     _news = {}
     created_at = now - timedelta(days=days_ago)
     WebDriverWait(driver, 120).until(
         EC.visibility_of_element_located((By.XPATH, "//div[@class='column date clickable']"))
     )
+    logger.info(f"get a {counter} page with {url}")
     show_down = driver.find_elements(By.XPATH, ".//div[@class='column actions']")
+
     for button in show_down:
         try:
             button.click()
-        except:
+        except WebDriverException:
             continue
     topics = driver.find_elements(By.XPATH, "//div[@class='scam-database-row ']")
     for topic in topics:
@@ -60,7 +57,8 @@ def get_page_topics(driver):
         if not new_topic:
             break
         _news = {**_news, **new_topic}
-    return _news, created_at
+    counter += 1
+    return _news, created_at, counter
 
 
 def topic_parser(_topic):
@@ -77,10 +75,10 @@ def topic_parser(_topic):
         header = _topic.find_element(By.XPATH, ".//div[@class='column justify-start project-name']").text
         name = f"{created_at.strftime('%Y-%m-%d')} - {header}"
         new_topic[name] = {
-            "date": created_at.strftime('%Y-%m-%d'),
+            "date": created_at.strftime("%Y-%m-%d"),
             "header": header,
             "source": url,
-            "About (slowmist)": ""
+            "About (slowmist)": "",
         }
         for key, value in classes.items():
             try:
@@ -96,3 +94,4 @@ def topic_parser(_topic):
 def pagination(driver):
     next_button = driver.find_element(By.XPATH, "//div[@class='arrow right ']")
     next_button.click()
+
