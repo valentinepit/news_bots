@@ -11,13 +11,12 @@ from utils.selen_driver import get_webdriver
 logger = logging.getLogger(__name__)
 
 url = "https://defiyield.app/rekt-database"
-days_ago = 1
+days_ago = 10
 now = datetime.now().date()
 
 
 def get_new_topics():
     news = {}
-    page_index = 0
     driver = get_webdriver()
     try:
         driver.implicitly_wait(30)
@@ -28,7 +27,7 @@ def get_new_topics():
         )
         date_column.click()
         while now - last_message_date < timedelta(days=days_ago):
-            topics, last_message_date, page_number = get_page_topics(driver, page_index)
+            topics, last_message_date = get_page_topics(driver)
             news = {**news, **topics}
             pagination(driver)
     finally:
@@ -37,13 +36,13 @@ def get_new_topics():
     return news
 
 
-def get_page_topics(driver, counter):
+def get_page_topics(driver):
     _news = {}
     created_at = now - timedelta(days=days_ago)
     WebDriverWait(driver, 120).until(
         EC.visibility_of_element_located((By.XPATH, "//div[@class='column date clickable']"))
     )
-    logger.info(f"get a {counter} page with {url}")
+    logger.info(f"get a page with {url}")
     show_down = driver.find_elements(By.XPATH, ".//div[@class='column actions']")
 
     for button in show_down:
@@ -57,8 +56,7 @@ def get_page_topics(driver, counter):
         if not new_topic:
             break
         _news = {**_news, **new_topic}
-    counter += 1
-    return _news, created_at, counter
+    return _news, created_at
 
 
 def topic_parser(_topic):
@@ -72,7 +70,9 @@ def topic_parser(_topic):
     date = _topic.find_element(By.XPATH, ".//div[@class='column date']").text
     created_at = datetime.strptime(date, "%d.%m.%Y").date()
     if now - created_at < timedelta(days=days_ago):
-        header = _topic.find_element(By.XPATH, ".//div[@class='column justify-start project-name']").text
+        header = _topic.find_element(By.XPATH, ".//div[@class='column justify-start project-name']").text.replace(
+            " (2)", ""
+        )
         name = f"{created_at.strftime('%Y-%m-%d')} - {header}"
         new_topic[name] = {
             "date": created_at.strftime("%Y-%m-%d"),
@@ -88,10 +88,10 @@ def topic_parser(_topic):
             new_topic[name][key] = elem
     else:
         new_topic = None
+
     return new_topic, created_at
 
 
 def pagination(driver):
     next_button = driver.find_element(By.XPATH, "//div[@class='arrow right ']")
     next_button.click()
-

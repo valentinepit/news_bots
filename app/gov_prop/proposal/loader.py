@@ -1,5 +1,4 @@
 import logging
-from time import sleep
 
 from selenium.common.exceptions import StaleElementReferenceException
 from selenium.webdriver.common.by import By
@@ -25,7 +24,9 @@ class ProposalNews:
             while status != "Closed":
                 WebDriverWait(driver, 120).until(
                     EC.visibility_of_element_located(
-                        (By.XPATH, "//div[@class='lmb-2 flex justify-between items-center']")))
+                        (By.XPATH, "//div[@class='lmb-2 flex justify-between items-center']")
+                    )
+                )
                 containers = page.find_elements(By.XPATH, "//div[@class='leading-6']")
                 for container in containers[1:]:
                     try:
