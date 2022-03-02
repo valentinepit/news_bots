@@ -2,8 +2,8 @@ import json
 import logging
 from typing import Dict
 
-# from contrib.notion import api as notion_api
 from contrib.notion.api import NotionAPI as na
+
 from .defiyield import get_new_topics as defiyeld
 from .hacked import get_new_topics as hacked
 
@@ -38,6 +38,8 @@ def compile_topics(main_list: Dict, secondary_list: Dict) -> Dict:
             if two_sources_flag:
                 main_list[main_name]["source"] += f", {_data['source']}"
                 main_list[main_name]["About (slowmist)"] = _data["About (slowmist)"]
+                if not main_list[main_name]["attack_method"]:
+                    main_list[main_name]["attack_method"] = _data["attack_method"]
                 two_sources_flag = True
                 break
         if not two_sources_flag:

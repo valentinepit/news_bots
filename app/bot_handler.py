@@ -149,11 +149,10 @@ async def send_multipart_message(messages, channel_id, parse_mode="HTML", disabl
 
 
 async def scheduler():
-    # aioschedule.every(5).minutes.do(update_discord_news)
-    # aioschedule.every(10).minutes.do(update_notion_news)
-    aioschedule.every(1).minutes.do(update_exploits)
-
-    # aioschedule.every(1).days.do(update_gov_prop_news)
+    aioschedule.every(5).minutes.do(update_discord_news)
+    aioschedule.every(10).minutes.do(update_notion_news)
+    aioschedule.every(1).days.do(update_exploits)
+    aioschedule.every(1).days.do(update_gov_prop_news)
     while True:
         await aioschedule.run_pending()
         await asyncio.sleep(1)

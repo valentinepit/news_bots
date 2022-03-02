@@ -23,9 +23,7 @@ class ProposalNews:
             status = ""
             while status != "Closed":
                 WebDriverWait(driver, 120).until(
-                    EC.visibility_of_element_located(
-                        (By.XPATH, "//div[@class='lmb-2 flex justify-between items-center']")
-                    )
+                    EC.visibility_of_element_located((By.XPATH, "//div[@class='flex items-center space-x-1']"))
                 )
                 containers = page.find_elements(By.XPATH, "//div[@class='leading-6']")
                 for container in containers[1:]:

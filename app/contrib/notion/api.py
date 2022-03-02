@@ -2,53 +2,14 @@ import json
 import logging
 import os
 
-import requests
-
-from notion.message_editor import create_exploit_page, create_project_page
-
 import cfscrape
+import requests
 import requests.adapters
 from requests.packages.urllib3.util.retry import Retry
 
+from notion.message_editor import create_exploit_page, create_project_page
+
 logger = logging.getLogger(__name__)
-
-BASE_URL = "https://api.notion.com/v1/"
-NOTION_TOKEN = os.environ["NOTION_TOKEN"]
-DB_ID = os.environ["BASE_ID"]
-
-EXPLOITS_ID = os.environ["EXPLOITS_ID"]
-
-FILTER = json.dumps({"filter": {"property": "Status", "select": {"equals": "Опубликовать"}}})
-
-HEADERS = {
-    "Authorization": "Bearer " + NOTION_TOKEN,
-    "Notion-Version": "2021-08-16",
-    "Content-Type": "application/json",
-}
-
-
-def read_database(_id=DB_ID, _filter=FILTER):
-    url = f"{BASE_URL}databases/{_id}/query"
-    res = requests.request("POST", url, headers=HEADERS, data=_filter)
-    data = res.json()
-    return data
-
-
-def change_news_status(page_id):
-    update_url = f"{BASE_URL}pages/{page_id}"
-    update_data = {"properties": {"Status": {"select": {"name": "Опубликовано"}}}}
-    data = json.dumps(update_data)
-    requests.request("PATCH", update_url, headers=HEADERS, data=data)
-
-
-def create_page(_source, _data):
-    url = f"{BASE_URL}pages/"
-    if _source == "new_project":
-        payload = create_project_page(_data)
-    else:
-        payload = create_exploit_page(_source, _data)
-    res = requests.request("POST", url, json=payload, headers=HEADERS)
-    return res.json()["id"]
 
 
 class NotionAPI:
@@ -78,7 +39,10 @@ class NotionAPI:
             js = params["json"]
         except KeyError:
             js = None
-        response = self.session.post(url, timeout=self.request_timeout, data=data, json=js)
+        if url.endswith("query") or url.endswith("pages/"):
+            response = self.session.post(url, timeout=self.request_timeout, data=data, json=js)
+        else:
+            response = self.session.patch(url, timeout=self.request_timeout, data=data, json=js)
         try:
             response.raise_for_status()
             return response.json()
@@ -104,3 +68,10 @@ class NotionAPI:
         else:
             payload = create_exploit_page(args[0], args[1])
         return self.__request(url, {"json": payload})["id"]
+
+    def change_news_status(self, *args):
+        page_id = args[0]
+        url = f"{self.__API_URL_BASE}pages/{page_id}"
+        update_data = {"properties": {"Status": {"select": {"name": "Опубликовано"}}}}
+        data = json.dumps(update_data)
+        return self.__request(url, {"data": data})
