@@ -11,7 +11,7 @@ from contrib.notion.api import NotionAPI as na
 logger = logging.getLogger(__name__)
 
 NEWS_ID = os.environ["BASE_ID"]
-FILTER = json.dumps({"filter": {"property": "Status", "select": {"equals": "тест"}}})
+FILTER = json.dumps({"filter": {"property": "Status", "select": {"equals": "Опубликовать"}}})
 
 
 class News:
