@@ -1,42 +1,20 @@
-import asyncio
 import json
 import logging
 import os
 from datetime import datetime
 
 import pytz
-import requests
 
-import app.notion.message_editor as me
-from app.tg_bot.aio_bot import NotionBot
+import notion.message_editor as me
+from contrib.notion.api import NotionAPI as na
 
 logger = logging.getLogger(__name__)
 
-NOTION_TOKEN = os.environ["NOTION_TOKEN"]
-DB_ID = os.environ["BASE_ID"]
-
-TG_TOKEN = os.environ["TG_TOKEN"]
-CHANNEL_ID = os.environ["CHANNEL_ID"]
-
-BASE_URL = "https://api.notion.com/v1/"
-
-HEADERS = {
-    "Authorization": "Bearer " + NOTION_TOKEN,
-    "Notion-Version": "2021-08-16",
-    "Content-Type": "application/json",
-}
-
-FILTER = json.dumps({"filter": {"property": "Status", "select": {"equals": "Опубликовать"}}})
+NEWS_ID = os.environ["BASE_ID"]
+FILTER = json.dumps({"filter": {"property": "Status", "select": {"equals": "тест"}}})
 
 
 class News:
-    def read_database(self):
-        url = f"{BASE_URL}databases/{DB_ID}/query"
-        res = requests.request("POST", url, headers=HEADERS, data=FILTER)
-        logger.info("We have logged in to Notion")
-        data = res.json()
-        return data
-
     def find_news(self, _data):
         public_list = []
         for item in _data["results"]:
@@ -45,35 +23,25 @@ class News:
             public_list.append(_news)
         return public_list
 
-    def change_news_status(self, page_id):
-        update_url = f"{BASE_URL}pages/{page_id}"
-        update_data = {"properties": {"Status": {"select": {"name": "Опубликовано"}}}}
-        data = json.dumps(update_data)
-        requests.request("PATCH", update_url, headers=HEADERS, data=data)
-
-    def public_messages(self, message_list):
+    def public_messages(self, message_list, api):
         now = datetime.now(pytz.utc)
-        cnt = 0
-        bot = NotionBot()
+        messages = []
         for _message in message_list:
             try:
                 public_time = datetime.fromisoformat(_message["time"])
+                if public_time < now:
+                    tg_message = me.create_message(_message)
+                    messages.append(tg_message)
+                    api.change_news_status(_message["id"])
             except TypeError:
                 logger.info(f"Invalid date in message: {_message['title']}")
                 continue
-            if public_time < now:
-                tg_message = me.create_message(_message)
-                if tg_message["photo"]:
-                    asyncio.run(bot.send_photo(tg_message["text"], tg_message["photo"]))
-                else:
-                    asyncio.run(bot.send_message(tg_message["text"]))
-                cnt += 1
-                self.change_news_status(_message["id"])
-        asyncio.run(bot.disconnect())
-        return cnt
+        return messages
 
     def update_news(self):
-        notion_db = self.read_database()
+        api = na()
+        notion_db = api.read_database(NEWS_ID, FILTER)
         news = self.find_news(notion_db)
-        cnt = self.public_messages(news)
-        logger.info(f"{cnt} news loaded to tg from Notion")
+        messages = self.public_messages(news, api)
+        logger.info(f"{len(messages)} news loaded to tg from Notion")
+        return messages

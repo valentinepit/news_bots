@@ -1,0 +1,141 @@
+{
+  "parent": {
+    "database_id": "1dff0122-648d-4ec1-8133-a1bbc15be575",
+    "type": "database_id"
+  },
+  "properties": {
+    "About defiyield": {
+      "id": "ouMF",
+      "rich_text": [
+        {
+          "annotations": {
+            "bold": false,
+            "code": false,
+            "color": "default",
+            "italic": false,
+            "strikethrough": false,
+            "underline": false
+          },
+          "href": "",
+          "plain_text": "",
+          "text": {
+            "content": ""
+          },
+          "type": "text"
+        }
+      ],
+      "type": "rich_text"
+    },
+    "About slowmist": {
+      "id": "E%5CAO",
+      "rich_text": [
+        {
+          "annotations": {
+            "bold": false,
+            "code": false,
+            "color": "default",
+            "italic": false,
+            "strikethrough": false,
+            "underline": false
+          },
+          "href": "",
+          "plain_text": "",
+          "text": {
+            "content": ""
+          },
+          "type": "text"
+        }
+      ],
+      "type": "rich_text"
+    },
+    "Attachments": {
+      "files": [],
+      "id": "CtJ%3D",
+      "type": "files"
+    },
+    "Attack type": {
+      "id": "KjxU",
+      "select": {},
+      "type": "select"
+    },
+    "Blockchain": {
+      "id": "YI%7Bq",
+      "relation": [],
+      "type": "relation"
+    },
+    "Date of exploit": {
+      "date": {
+        "start": ""
+      },
+      "id": "EXfq",
+      "type": "date"
+    },
+    "Exploits. Type": {
+      "id": "p%5Ebo",
+      "relation": [],
+      "type": "relation"
+    },
+    "Losses": {
+      "id": "rQq%40",
+      "number": {
+        "format": "dollar"
+      },
+      "type": "number"
+    },
+    "Other": {
+      "id": "mqqs",
+      "rich_text": [],
+      "type": "rich_text"
+    },
+    "Projects": {
+      "id": "pljE",
+      "relation": [],
+      "type": "relation"
+    },
+    "Source": {
+      "id": "i%7D_x",
+      "rich_text": [
+        {
+          "annotations": {
+            "bold": false,
+            "code": false,
+            "color": "default",
+            "italic": false,
+            "strikethrough": false,
+            "underline": false
+          },
+          "href": "",
+          "plain_text": "",
+          "text": {
+            "content": ""
+          },
+          "type": "text"
+        }
+      ],
+      "type": "rich_text"
+    },
+    "Title": {
+      "id": "title",
+      "title": [
+        {
+          "annotations": {
+            "bold": false,
+            "code": false,
+            "color": "default",
+            "italic": false,
+            "strikethrough": false,
+            "underline": false
+          },
+          "href": "",
+          "plain_text": "",
+          "text": {
+            "content": ""
+          },
+          "type": "text"
+        }
+      ],
+      "type": "title"
+    }
+  },
+  "url": ""
+}

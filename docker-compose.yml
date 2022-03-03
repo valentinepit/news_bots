@@ -7,21 +7,19 @@ x-common:
     context: .
   image: news-bot_back:latest
   restart: always
-  networks:
-    - rabbitmq_net
   env_file:
     - .env
 
 
 services:
-  back:
-    <<: *base-image
-    command: celery -A app.celery:app worker --loglevel=INFO --concurrency=1 -n worker1@%h
+  tg_bot:
+    build: ./app
+    env_file:
+      - .env
+    links:
+      - chromedriver
 
-  celery-beat:
-    <<: *base-image
-    command: celery -A app.celery:app beat --loglevel=INFO
+  chromedriver:
+    image: selenium/standalone-chrome
+    hostname: chromedriver:4444
 
-networks:
-  rabbitmq_net:
-    external: true
