@@ -43,13 +43,13 @@ async def process_help_command(message: types.Message):
         "/delete_discord - Убрать канал (Name) \n"
         "/governance - Список governance сайтов \n"
         "/add_governance - Добавить сайт (Name:url) \n"
-        "/delete_governance - Убрать канал (Name) \n"
+        "/delete_governance - Убрать сайт (Name) \n"
         "/proposal - Список proposal сайтов \n"
         "/add_proposal - Добавить сайт (Name:url)\n"
-        "/delete_proposal - Убрать канал (Name) \n"
-        "/twitter - Список proposal сайтов \n"
-        "/add_twitter - Добавить сайт (Name)\n"
-        "/delete_twitter - Убрать канал (Name) \n"
+        "/delete_proposal - Убрать сайт (Name) \n"
+        "/twitter - Список twitter аккаунтов сайтов \n"
+        "/add_twitter - Добавить аккаунт (Name)\n"
+        "/delete_twitter - Убрать аккаунт (Name) \n"
     )
 
 
