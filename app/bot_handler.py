@@ -27,7 +27,7 @@ dp = Dispatcher(bot)
 
 logging.basicConfig(format="%(asctime)s - %(message)s", level=logging.INFO)
 logger = logging.getLogger(__name__)
-discord_channels_path = "app/discord_bot/discord_channels.json"
+discord_channels_path = "discord_bot/discord_channels.json"
 
 
 @dp.message_handler(commands=["start"])

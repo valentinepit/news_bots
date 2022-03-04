@@ -33,7 +33,7 @@ class ProposalNews:
                         continue
                     if status != "Closed":
                         try:
-                            text = container.find_element(By.CLASS_NAME, "break-words").text
+                            text = container.find_element(By.CLASS_NAME, "break-words mb-2 text-md").text
                         except StaleElementReferenceException:
                             text = ""
                         try:
