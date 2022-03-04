@@ -47,7 +47,7 @@ async def process_help_command(message: types.Message):
         "/proposal - Список proposal сайтов \n"
         "/add_proposal - Добавить сайт (Name:url)\n"
         "/delete_proposal - Убрать сайт (Name) \n"
-        "/twitter - Список twitter аккаунтов сайтов \n"
+        "/twitter - Список twitter аккаунтов \n"
         "/add_twitter - Добавить аккаунт (Name)\n"
         "/delete_twitter - Убрать аккаунт (Name) \n"
     )
