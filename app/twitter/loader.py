@@ -2,7 +2,7 @@ import logging
 import os
 
 import tweepy
-from tweepy.errors import Unauthorized
+from tweepy.errors import Unauthorized, TweepyException
 
 logger = logging.getLogger(__name__)
 
@@ -59,9 +59,13 @@ class TwitterNews:
         self.api = self.get_api()
         messages = []
         for source, last_id in self.sources.items():
-            new_messages, new_last_id = self.get_user_twits(source, last_id)
-            messages += new_messages
-            self.sources[source] = new_last_id
+            try:
+                new_messages, new_last_id = self.get_user_twits(source, last_id)
+                self.sources[source] = new_last_id
+                messages += new_messages
+            except TweepyException:
+                logger.info("Can't connect to Twitter user")
+
         for msg in messages:
             if msg.startswith("BAD_CHANNEL"):
                 self.sources.pop(msg.split()[1])
