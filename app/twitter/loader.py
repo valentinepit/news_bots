@@ -2,7 +2,7 @@ import logging
 import os
 
 import tweepy
-from tweepy.errors import Unauthorized, TweepyException
+from tweepy.errors import TweepyException, Unauthorized
 
 logger = logging.getLogger(__name__)
 
