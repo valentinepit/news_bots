@@ -1,0 +1,9 @@
+{
+  "Abracadabra": ["https://forum.abracadabra.money", "gov"],
+  "Frax": ["https://gov.frax.finance", "gov"],
+  "Yarn": ["https://gov.yearn.finance", "gov"],
+  "Angle": ["https://gov.angle.money", "gov"],
+  "Convex Finance": ["https://vote.convexfinance.com", "prop"],
+  "Stake DAO": ["https://signal.stakedao.org", "prop"]
+}
+
