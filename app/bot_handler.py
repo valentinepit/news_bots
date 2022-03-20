@@ -187,7 +187,7 @@ async def scheduler():
     aioschedule.every(5).minutes.do(update_discord_news)
     aioschedule.every(10).minutes.do(update_twitter_news)
     aioschedule.every(10).minutes.do(update_notion_news)
-    aioschedule.every().day.at("10:17").do(update_exploits)
+    aioschedule.every().day.at("10:10").do(update_exploits)
     aioschedule.every().day.at("10:20").do(update_gov_prop_news)
     while True:
         await aioschedule.run_pending()
