@@ -11,7 +11,7 @@ from utils.selen_driver import get_webdriver
 logger = logging.getLogger(__name__)
 
 url = "https://defiyield.app/rekt-database"
-days_ago = 1
+days_ago = 15
 now = datetime.now().date()
 
 

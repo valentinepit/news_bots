@@ -1,5 +1,6 @@
 import json
 import logging
+from datetime import datetime, timedelta
 from typing import Dict
 
 from contrib.notion.api import NotionAPI as na
@@ -50,12 +51,18 @@ def compile_topics(main_list: Dict, secondary_list: Dict) -> Dict:
 def check_inclusion(first: Dict, second: Dict) -> bool:
     name_1 = first["header"].lower()
     name_2 = second["header"].lower()
+    if date_match(first["date"], second["date"]) and (
+        (name_1 in name_2 or name_2 in name_1) or name_1.split()[0] in name_2 or name_1.replace(" ", "") in name_2
+    ):
+        return True
+    return False
+
+
+def date_match(date_one, date_two):
     if (
-        first["date"] == second["date"]
-        or (name_1 in name_2 or name_2 in name_1)
-        or name_1.split()[0] in name_2
-        or name_1.replace(" ", "") in name_2
-        or first["amount_of_loss"] == second["amount_of_loss"]
+        date_one == date_two
+        or datetime.strptime(date_one, "%Y-%M-%d") - datetime.strptime(date_two, "%Y-%M-%d") == timedelta(days=1)
+        or datetime.strptime(date_two, "%Y-%M-%d") - datetime.strptime(date_one, "%Y-%M-%d") == timedelta(days=1)
     ):
         return True
     return False
