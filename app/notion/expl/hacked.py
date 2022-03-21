@@ -12,7 +12,7 @@ headers = {
 }
 
 base_url = "https://hacked.slowmist.io/en/"
-days_ago = 15
+days_ago = 1
 
 
 def get_new_topics():
