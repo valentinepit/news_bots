@@ -1,6 +1,6 @@
 import logging
 
-from selenium.common.exceptions import StaleElementReferenceException
+from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
@@ -13,36 +13,39 @@ logger = logging.getLogger(__name__)
 class ProposalNews:
     def __init__(self, url):
         self.url = url
-        self.session_id = None
 
     def get_new_proposals(self):
         driver = get_webdriver()
+        driver.implicitly_wait(150)
         try:
             page = self.get_page(driver)
             new_proposals = []
             status = ""
             while status != "Closed":
-                WebDriverWait(driver, 120).until(
-                    EC.visibility_of_element_located((By.XPATH, "//div[@class='flex items-center space-x-1']"))
-                )
+                logger.info(self.url)
+                wait = WebDriverWait(driver, 100)
+                wait.until(EC.element_to_be_clickable((By.XPATH, "//span[@class='truncate w-full']")))
                 containers = page.find_elements(By.XPATH, "//div[@class='leading-6']")
                 for container in containers[1:]:
                     try:
                         status = container.find_element(By.CLASS_NAME, "State").text
-                    except StaleElementReferenceException:
+                    except NoSuchElementException:
                         continue
                     if status != "Closed":
                         try:
-                            text = container.find_element(By.CLASS_NAME, "break-words").text
-                        except StaleElementReferenceException:
+                            text = container.find_element(By.XPATH, "//p[@class='break-words mb-2 text-md']").text
+                        except NoSuchElementException:
                             text = ""
+                        logger.info(f"{text = }")
                         try:
                             header = container.find_element(By.CLASS_NAME, "my-1").text
-                        except StaleElementReferenceException:
+                        except NoSuchElementException:
                             continue
-                        msg = f"{header}\n{text}"
+                        msg = f"<b>{header}</b>\n{text}"
                         if msg not in new_proposals:
                             new_proposals.append(msg)
+                    else:
+                        break
                     page.execute_script("window.scrollTo(0, window.scrollY + 200)")
         finally:
             driver.quit()

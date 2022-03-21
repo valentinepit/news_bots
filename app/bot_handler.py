@@ -12,19 +12,22 @@ from aiogram.utils.exceptions import BadRequest
 from discord_bot import update_news as discord
 from gov_prop.loader import get_news as gov_prop
 from gov_prop.loader import source_list_path
-from notion import News
 from notion.expl.loader import update_exploits as exploits
+from notion.loader import News
 from notion.message_editor import message_cutter
+from twitter.loader import TwitterNews
 
 TG_TOKEN = os.environ["TG_ANALYTICS_TOKEN"]
 ANALYTICS_ID = os.environ["ANALYTICS_CHANNEL_ID"]
 NEWS_ID = os.environ["CHANNEL_ID"]
+TWITTER_ID = os.environ["TWITTER_CHANNEL_ID"]
 
 bot = Bot(token=TG_TOKEN)
 dp = Dispatcher(bot)
 
+logging.basicConfig(format="%(asctime)s - %(message)s", level=logging.INFO)
 logger = logging.getLogger(__name__)
-discord_channels_path = "app/discord_bot/discord_channels.json"
+discord_channels_path = "discord_bot/discord_channels.json"
 
 
 @dp.message_handler(commands=["start"])
@@ -40,10 +43,13 @@ async def process_help_command(message: types.Message):
         "/delete_discord - Убрать канал (Name) \n"
         "/governance - Список governance сайтов \n"
         "/add_governance - Добавить сайт (Name:url) \n"
-        "/delete_governance - Убрать канал (Name) \n"
+        "/delete_governance - Убрать сайт (Name) \n"
         "/proposal - Список proposal сайтов \n"
         "/add_proposal - Добавить сайт (Name:url)\n"
-        "/delete_proposal - Убрать канал (Name) \n"
+        "/delete_proposal - Убрать сайт (Name) \n"
+        "/twitter - Список twitter аккаунтов \n"
+        "/add_twitter - Добавить аккаунт (Name)\n"
+        "/delete_twitter - Убрать аккаунт (Name) \n"
     )
 
 
@@ -90,15 +96,20 @@ async def process_delete_source_command(message: types.Message):
     await message.reply(msg)
 
 
-@dp.message_handler(commands=["governance", "proposal"])
+@dp.message_handler(commands=["governance", "proposal", "twitter"])
 async def process_gov_prop_command(message: types.Message):
     channels = json.loads(open(source_list_path, "r").read())
     msg = "Список активных каналов: \n"
+    if message.get_command() == "/twitter":
+        tw = TwitterNews()
+        for source in tw.sources:
+            msg += f"{source}\n"
     for _name, description in channels.items():
         if message.get_command() == "/governance" and description[1] == "gov":
             msg += f"{_name} : {description[0]}\n"
         elif message.get_command() == "/proposal" and description[1] == "prop":
             msg += f"{_name} : {description[0]}\n"
+            pass
     await message.reply(msg)
 
 
@@ -118,6 +129,30 @@ async def process_add_site_command(message: types.Message):
         msg = f"Добавлен новый канал {channel_ids[0]}"
     except (IndexError, ValueError):
         msg = "Параметры должны быть в виде Channel name: Channel url"
+    await message.reply(msg)
+
+
+@dp.message_handler(commands=["delete_twitter"])
+async def process_add_twitter_command(message: types.Message):
+    tw = TwitterNews()
+    try:
+        channel_id = message.get_args()
+        _name = tw.sources.pop(channel_id)
+        msg = f"Удален канал {_name}"
+    except (IndexError, ValueError):
+        msg = "Параметры должны быть в виде Channel name"
+    await message.reply(msg)
+
+
+@dp.message_handler(commands=["add_twitter"])
+async def process_delete_twitter_command(message: types.Message):
+    tw = TwitterNews()
+    try:
+        channel_id = message.get_args()
+        tw.sources[channel_id] = None
+        msg = f"Добавлен новый канал {channel_id}"
+    except (IndexError, ValueError):
+        msg = "Параметры должны быть в виде Channel name"
     await message.reply(msg)
 
 
@@ -150,9 +185,10 @@ async def send_multipart_message(messages, channel_id, parse_mode="HTML", disabl
 
 async def scheduler():
     aioschedule.every(5).minutes.do(update_discord_news)
+    aioschedule.every(10).minutes.do(update_twitter_news)
     aioschedule.every(10).minutes.do(update_notion_news)
-    aioschedule.every(1).days.do(update_exploits)
-    aioschedule.every(1).days.do(update_gov_prop_news)
+    aioschedule.every().day.at("10:10").do(update_exploits)
+    aioschedule.every().day.at("10:20").do(update_gov_prop_news)
     while True:
         await aioschedule.run_pending()
         await asyncio.sleep(1)
@@ -190,9 +226,17 @@ async def update_gov_prop_news():
             await send_message(f"<b>{name}</b>\n{msg}", ANALYTICS_ID)
 
 
+async def update_twitter_news():
+    twitter_news = TwitterNews()
+    msgs = twitter_news.update_news()
+    for msg in msgs:
+        await send_message(msg, TWITTER_ID)
+
+
 def start_bot():
     executor.start_polling(dp, on_startup=on_startup)
 
 
 if __name__ == "__main__":
+
     start_bot()
