@@ -30,7 +30,7 @@ class ProposalNews:
                 for container in containers[1:]:
                     try:
                         status = container.find_element(By.CLASS_NAME, "State").text
-                    except (NoSuchElementException, StaleElementReferenceException) as e:
+                    except (NoSuchElementException, StaleElementReferenceException):
                         continue
                     if status != "Closed":
                         try:
