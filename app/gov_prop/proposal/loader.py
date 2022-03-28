@@ -24,13 +24,15 @@ class ProposalNews:
             while status != "Closed":
                 wait = WebDriverWait(driver, 100)
                 wait.until(EC.element_to_be_clickable((By.XPATH, "//span[@class='truncate w-full']")))
-                containers = page.find_elements(By.XPATH, "//div[@class='leading-5 sm:leading-6']")
+                containers = page.find_elements(By.XPATH, "//div[contains(@class, 'leading-6')]")
+                if len(containers) == 0:
+                    break
                 for container in containers[1:]:
                     try:
                         status = container.find_element(By.CLASS_NAME, "State").text
-                    except (NoSuchElementException, StaleElementReferenceException):
+                    except (NoSuchElementException, StaleElementReferenceException) as e:
                         continue
-                    if status != "Closed" or status == "":
+                    if status != "Closed":
                         try:
                             text = container.find_element(By.XPATH, "//p[@class='break-words mb-2 sm:text-md']").text
                         except NoSuchElementException:
