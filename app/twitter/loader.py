@@ -33,6 +33,7 @@ class TwitterNews:
             logger.info("Authentication to Twitter OK")
         except Exception as e:
             logger.info(f"{e} Error during authentication")
+            return None
         return api
 
     def get_user_twits(self, user_id, since_id=None):
@@ -58,6 +59,8 @@ class TwitterNews:
     def update_news(self):
         self.api = self.get_api()
         messages = []
+        if not self.api:
+            return messages
         for source, last_id in self.sources.items():
             try:
                 new_messages, new_last_id = self.get_user_twits(source, last_id)
