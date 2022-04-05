@@ -1,5 +1,4 @@
 import json
-import logging
 from datetime import datetime, timedelta
 from typing import Dict
 
@@ -7,8 +6,6 @@ from contrib.notion.api import NotionAPI as na
 
 from .defiyield import get_new_topics as defiyeld
 from .hacked import get_new_topics as hacked
-
-logger = logging.getLogger(__name__)
 
 
 def update_exploits():
@@ -25,7 +22,6 @@ def send_exploits_to_notion(_data: Dict):
         content["projects"], content["blockchain"] = get_relations_id(content, api)
 
         if not content["projects"]:
-            logger.info(f"{content['projects'] =}")
             new_project_id = api.create_page("new_project", content)
             content["projects"].append({"id": new_project_id})
         api.create_page(name, content)

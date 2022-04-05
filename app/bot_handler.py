@@ -1,14 +1,15 @@
 import asyncio
 import json
-import logging
 import os
 
 import aioschedule
+import sentry_sdk
 from aiogram import Bot, types
 from aiogram.dispatcher import Dispatcher
 from aiogram.utils import executor
 from aiogram.utils.exceptions import BadRequest
 
+from config import logger
 from discord_bot import update_news as discord
 from gov_prop.loader import get_news as gov_prop
 from gov_prop.loader import source_list_path
@@ -25,8 +26,6 @@ TWITTER_ID = os.environ["TWITTER_CHANNEL_ID"]
 bot = Bot(token=TG_TOKEN)
 dp = Dispatcher(bot)
 
-logging.basicConfig(format="%(asctime)s - %(message)s", level=logging.INFO)
-logger = logging.getLogger(__name__)
 discord_channels_path = "discord_bot/discord_channels.json"
 
 
@@ -189,6 +188,7 @@ async def scheduler():
     aioschedule.every(10).minutes.do(update_notion_news)
     aioschedule.every().day.at("10:10").do(update_exploits)
     aioschedule.every().day.at("10:20").do(update_gov_prop_news)
+
     while True:
         await aioschedule.run_pending()
         await asyncio.sleep(1)
@@ -228,7 +228,11 @@ async def update_gov_prop_news():
 
 async def update_twitter_news():
     twitter_news = TwitterNews()
-    msgs = twitter_news.update_news()
+    msgs = []
+    try:
+        msgs = twitter_news.update_news()
+    except Exception as e:
+        sentry_sdk.capture_exception(e)
     for msg in msgs:
         await send_message(msg, TWITTER_ID)
 
@@ -238,5 +242,4 @@ def start_bot():
 
 
 if __name__ == "__main__":
-
     start_bot()

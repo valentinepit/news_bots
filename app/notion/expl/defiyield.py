@@ -1,4 +1,3 @@
-import logging
 from datetime import datetime, timedelta
 
 from selenium.common.exceptions import NoSuchElementException, WebDriverException
@@ -6,9 +5,8 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
+from config import logger
 from utils.selen_driver import get_webdriver
-
-logger = logging.getLogger(__name__)
 
 url = "https://defiyield.app/rekt-database"
 days_ago = 1
