@@ -157,7 +157,6 @@ async def process_delete_twitter_command(message: types.Message):
 
 async def send_photo(message, photo, channel_id):
     messages = [message]
-    logger.info(message)
     length = 1024
     if len(message) > length:
         messages = message_cutter(length, message)
