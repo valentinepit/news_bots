@@ -1,10 +1,9 @@
-import logging
 from datetime import datetime, timedelta
 
 import requests
 from lxml import html
 
-logger = logging.getLogger(__name__)
+from config import logger
 
 headers = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"

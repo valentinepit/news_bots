@@ -28,7 +28,7 @@ lint:
     - ssh ${USER}@${IP} rm -r /home/projects/news-bot || true
     - scp -rp $(pwd) ${USER}@${IP}:/home/projects/news-bot
     - ssh ${USER}@${IP} docker-compose -f /home/projects/news-bot/docker-compose.yml up --build -d --remove-orphans
-  when: manual
+  when: on_success
 
 deploy_prod:
   <<: *deploy

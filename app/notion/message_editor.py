@@ -12,10 +12,15 @@ def create_message(message):
 
 
 def convert_row_news(_news):
+    title = ""
     source = f"{_news['Source']['url']}\n" if _news["Source"]["url"] else ""
     public_time = _news["Date to publish"]["date"]["start"] if _news["Date to publish"]["date"] else datetime.now()
     text = add_tags_to_text(_news["Notes"]["rich_text"]) + "\n" if _news["Notes"]["rich_text"] != [] else ""
-    title = f"{_news['Name']['title'][0]['text']['content']}\n" if _news["Name"]["title"] else ""
+    if _news["Name"]["title"] and len(_news["Name"]["title"]) == 1:
+        title = f"{_news['Name']['title'][0]['text']['content']}\n"
+    elif len(_news["Name"]["title"]) > 1:
+        for title_part in _news["Name"]["title"]:
+            title += title_part["text"]["content"]
     tags = _news["#"]["rich_text"][0]["plain_text"].split("\n") if _news["#"]["rich_text"] != [] else ""
     try:
         picture = _news["Picture"]["files"][0]["file"]["url"] if _news["Picture"]["files"] != [] else False
