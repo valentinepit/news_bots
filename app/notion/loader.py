@@ -1,14 +1,12 @@
 import json
-import logging
 import os
 from datetime import datetime
 
 import pytz
 
 import notion.message_editor as me
+from config import logger
 from contrib.notion.api import NotionAPI as na
-
-logger = logging.getLogger(__name__)
 
 NEWS_ID = os.environ["BASE_ID"]
 FILTER = json.dumps({"filter": {"property": "Status", "select": {"equals": "Опубликовать"}}})

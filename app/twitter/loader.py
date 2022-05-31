@@ -38,7 +38,7 @@ class TwitterNews:
         logger.info(f"uploading twits from {user_id}")
         if not since_id:
             try:
-                new_user_twits = self.api.user_timeline(screen_name=user_id, count=1)
+                new_user_twits = self.api.user_timeline(screen_name=user_id, count=1, include_rts=False)
             except Unauthorized:
                 logger.info(f"can't get twits from {user_id}")
                 msgs.append(f"BAD_CHANNEL {user_id}")
