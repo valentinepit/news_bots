@@ -33,7 +33,7 @@ def add_tags_to_text(data):
     result = ""
     for item in data:
         new_line_marker = ""
-        if not item["text"]["link"]:
+        if not item["text"]["link"] and item["text"]["content"] != " ":
             temp = item["text"]["content"]
             if temp.endswith("\n\n"):
                 new_line_marker = "\n\n"
@@ -41,7 +41,7 @@ def add_tags_to_text(data):
             elif temp.endswith("\n"):
                 new_line_marker = "\n"
                 temp = temp[:-1]
-            if item["annotations"]["bold"] and temp != " ":
+            if item["annotations"]["bold"]:
                 temp = f"<b>{temp}</b>{new_line_marker}"
             if item["annotations"]["italic"]:
                 temp = f"<i>{temp}</i>{new_line_marker}"
@@ -52,7 +52,7 @@ def add_tags_to_text(data):
             if item["annotations"]["color"] != "default":
                 temp = f'<span style="color:' f'{item["annotations"]["color"]}">{temp}</span>{new_line_marker}'
             result = result + temp
-        else:
+        elif item["text"]["link"]:
             result = result + f'<a href="' f'{item["text"]["link"]["url"]}">' f'{item["text"]["content"]}</a>'
 
     return result
