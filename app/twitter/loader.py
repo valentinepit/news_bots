@@ -46,7 +46,9 @@ class TwitterNews:
                 msgs.append(f"BAD_CHANNEL {user_id}")
                 return msgs, since_id
         else:
-            new_user_twits = self.api.user_timeline(screen_name=user_id, since_id=since_id)
+            new_user_twits = self.api.user_timeline(
+                screen_name=user_id, since_id=since_id, include_rts=False, exclude_replies=True
+            )
         for twit in new_user_twits:
             msgs.append(f"<b>{user_id}</b>\n{twit.created_at}\n\n{twit.text}")
 
