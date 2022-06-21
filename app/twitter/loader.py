@@ -50,7 +50,8 @@ class TwitterNews:
                 screen_name=user_id, since_id=since_id, include_rts=False, exclude_replies=True
             )
         for twit in new_user_twits:
-            msgs.append(f"<b>{user_id}</b>\n{twit.created_at}\n\n{twit.text}")
+            if not twit.text.startswith("RT @"):
+                msgs.append(f"<b>{user_id}</b>\n{twit.created_at}\n\n{twit.text}")
 
         try:
             _last_id = new_user_twits[0].id
@@ -68,8 +69,8 @@ class TwitterNews:
                 new_messages, new_last_id = self.get_user_twits(source, last_id)
                 self.sources[source] = new_last_id
                 messages += new_messages
-            except TweepyException:
-                logger.info("Can't connect to Twitter user")
+            except TweepyException as e:
+                logger.info(f"Can't connect to {source} Error: {e}")
 
         for msg in messages:
             if msg.startswith("BAD_CHANNEL"):
